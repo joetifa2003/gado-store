@@ -4,18 +4,17 @@ import { Redirect, Stack } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import { usersDao } from "@/lib/dao";
-import { User } from "@/lib/dao/users";
 import { userContext } from "@/lib/userContext";
+import { UserData, userDao } from "@/lib/dao/user";
 
 export default function Layout() {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserData | null>(null);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        usersDao.get(user.uid).then((user) => {
+    const unsub = onAuthStateChanged(auth, (authUser) => {
+      if (authUser) {
+        userDao.get(authUser.uid).then((user) => {
           setUser(user);
           setLoading(false);
         });
