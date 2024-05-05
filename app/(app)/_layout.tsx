@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 import { userContext } from "@/lib/userContext";
 import { UserData, userDao } from "@/lib/dao/user";
+import LoadingScreen from "@/components/loadingScreen";
 
 export default function Layout() {
   const [loading, setLoading] = useState(true);
@@ -28,19 +29,7 @@ export default function Layout() {
   }, []);
 
   if (loading) {
-    return (
-      <View
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text>Loading...</Text>
-      </View>
-    );
+    return (<LoadingScreen />);
   }
 
   if (!user) {
@@ -58,7 +47,9 @@ export default function Layout() {
             backgroundColor: colors.base,
           },
         }}
-      ></Stack>
+      >
+        <Stack.Screen name="(customer-tabs)" options={{headerShown:false}} />
+      </Stack>
     </userContext.Provider>
   );
 }
