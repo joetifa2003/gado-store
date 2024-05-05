@@ -1,4 +1,4 @@
 import { createContext } from "react";
-import { User } from "./dao/users";
+import { UserData } from "./dao/user";
 
-export const userContext = createContext<User>(null as any);
+export const userContext = createContext<UserData>(null as any);
