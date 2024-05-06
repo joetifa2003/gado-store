@@ -4,15 +4,18 @@ import { Pressable, Text } from "react-native";
 export default function Button({
   onPress,
   title,
+  disabled,
 }: {
   title: string;
   onPress: () => void;
+  disabled?: boolean;
 }) {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={{
-        backgroundColor: colors.primary,
+        backgroundColor: disabled ? colors.white : colors.primary,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
