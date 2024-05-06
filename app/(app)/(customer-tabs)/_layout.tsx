@@ -29,6 +29,13 @@ const Layout = () => {
           headerRight: () => logoutBtn(),
         }}
       />
+      <Tabs.Screen
+        name="cart"
+        options={{
+          headerTitle: "Cart",
+          headerTitleAlign: "center",
+        }}
+      />
     </Tabs>
   );
 };

@@ -2,23 +2,31 @@ import React from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { ProductsData } from "@/lib/dao/products";
 import colors from "@/lib/colors";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
-const ProductCard = ({ productData }: { productData: ProductsData }) => {
+const ProductCard = ({
+  productData,
+  deleteProduct,
+}: {
+  productData: ProductsData;
+  deleteProduct?: () => void;
+}) => {
   return (
     <Pressable style={styles.container}>
       <Image source={{ uri: productData.productImage }} style={styles.image} />
       <View style={styles.productInfo}>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
+        <View style={styles.spacingElements}>
           <Text style={styles.productName}>{productData.name}</Text>
           <Text style={styles.productPrice}>{productData.price} L.E</Text>
         </View>
-        <Text>Gado Stores</Text>
+        <View style={styles.spacingElements}>
+          <Text>Gado Stores</Text>
+          {deleteProduct && (
+            <Pressable>
+              <AntDesign name="delete" size={24} color="black" />
+            </Pressable>
+          )}
+        </View>
       </View>
     </Pressable>
   );
@@ -41,6 +49,13 @@ const styles = StyleSheet.create({
   productInfo: {
     flex: 1,
     padding: 10,
+  },
+  spacingElements: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
   },
   productName: {
     fontSize: 16,
