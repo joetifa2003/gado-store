@@ -37,6 +37,18 @@ class ProductsDao {
                 name: "Product 5",
                 price: 50,
                 productImage: "https://img.freepik.com/free-vector/round-shape-podium-platform-backdrop-with-golden-frame_1017-44771.jpg?t=st=1714941189~exp=1714944789~hmac=24d0e8ca6ec2d581f491f9e2f8720a5ea8fafbe6abea60ae572974d36fcc9109&w=1060"
+            },
+            {
+                ownerId: "4",
+                name: "Product 6",
+                price: 76,
+                productImage: "https://img.freepik.com/free-photo/stone-podium-rock-pedestal-stage-empty-scene-luxury-product-display-natural-background-product-placement-3d-rendering_56104-2146.jpg?t=st=1714941113~exp=1714944713~hmac=ed7c3432e9e94f54f664e3e90c8cd039d56102c3d61fab971a887ba112810aab&w=1060"
+            },
+            {
+                ownerId: "9",
+                name: "Product 99",
+                price: 50,
+                productImage: "https://img.freepik.com/free-vector/round-shape-podium-platform-backdrop-with-golden-frame_1017-44771.jpg?t=st=1714941189~exp=1714944789~hmac=24d0e8ca6ec2d581f491f9e2f8720a5ea8fafbe6abea60ae572974d36fcc9109&w=1060"
             }
         ];
     
