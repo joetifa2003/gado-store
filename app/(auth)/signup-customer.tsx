@@ -5,6 +5,9 @@ import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import { View } from "react-native";
 import Toast from "react-native-toast-message";
+import * as ImagePicker from "expo-image-picker";
+import { uploadFile } from "@/lib/uploader";
+import Avatar from "@/components/avatar";
 
 export default function SignUpCustomer() {
   const [firstName, setFirstName] = useState("");
@@ -13,19 +16,20 @@ export default function SignUpCustomer() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [address, setAddress] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
   const router = useRouter();
 
-  const fields = [
-    firstName,
-    lastName,
-    email,
-    password,
-    confirmPassword,
-    address,
-  ];
-
   const signUp = useCallback(() => {
-    for (const f of fields) {
+    for (const f of [
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      address,
+      photoUrl,
+    ]) {
       if (!f) {
         Toast.show({
           text1: "Please fill all the required fields",
@@ -50,9 +54,10 @@ export default function SignUpCustomer() {
           {
             type: UserType.CUSTOMER,
             email: email,
-            firstName: firstName,
-            lastName: lastName,
+            firstName,
+            lastName,
             address: address,
+            avatar: photoUrl,
           },
           password,
         )
@@ -66,10 +71,56 @@ export default function SignUpCustomer() {
           });
         });
     }
-  }, fields);
+  }, [
+    firstName,
+    lastName,
+    email,
+    password,
+    confirmPassword,
+    address,
+    photoUrl,
+  ]);
+
+  const pickImage = useCallback(async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.5,
+    });
+    if (result.canceled) {
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      if (result.assets) {
+        const url = await uploadFile(result.assets[0].uri);
+        setPhotoUrl(url);
+      }
+    } catch (e) {
+      Toast.show({
+        text1: "Upload failed",
+        type: "error",
+      });
+      console.log(e);
+    } finally {
+      setUploading(false);
+    }
+  }, []);
 
   return (
-    <View>
+    <View style={{ width: "100%", gap: 16, padding: 8 }}>
+      <View style={{ display: "flex", alignItems: "center", width: "100%" }}>
+        <Avatar src={photoUrl} size={150} />
+      </View>
+      <Button
+        title="Chose profile picture"
+        onPress={pickImage}
+        disabled={uploading}
+      />
       <View>
         <Input
           placeholder="First name"
@@ -99,9 +150,9 @@ export default function SignUpCustomer() {
           value={address}
           onChangeText={setAddress}
         />
-
-        <Button title="Sign up" onPress={signUp} />
       </View>
+
+      <Button title="Sign up" onPress={signUp} />
     </View>
   );
 }
