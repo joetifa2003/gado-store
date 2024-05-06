@@ -4,6 +4,7 @@ import colors from "@/lib/colors";
 import Button from "@/components/button";
 import { auth } from "@/lib/firebase";
 import { View } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 const logoutBtn = () => {
   const logout = useCallback(() => {
@@ -27,6 +28,7 @@ const Layout = () => {
           tabBarLabel: "Home",
           headerTitleAlign: "center",
           headerRight: () => logoutBtn(),
+          tabBarIcon: () => <FontAwesome name="home" size={24} color="black" />,
         }}
       />
       <Tabs.Screen
@@ -34,6 +36,9 @@ const Layout = () => {
         options={{
           headerTitle: "Cart",
           headerTitleAlign: "center",
+          tabBarIcon: () => (
+            <FontAwesome name="shopping-cart" size={24} color="black" />
+          ),
         }}
       />
     </Tabs>
