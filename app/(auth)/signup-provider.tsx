@@ -7,6 +7,7 @@ import { View, Image, Text } from "react-native";
 import Toast from "react-native-toast-message";
 import * as ImagePicker from "expo-image-picker";
 import { uploadFile } from "@/lib/uploader";
+import Avatar from "@/components/avatar";
 
 export default function SignUpCustomer() {
   const [storeName, setStoreName] = useState("");
@@ -100,19 +101,16 @@ export default function SignUpCustomer() {
   }, []);
 
   return (
-    <View>
+    <View style={{ width: "100%", gap: 16, padding: 8 }}>
+      <View style={{ display: "flex", alignItems: "center", width: "100%" }}>
+        <Avatar src={photoUrl} size={150} />
+      </View>
+      <Button
+        title="Chose profile picture"
+        onPress={pickImage}
+        disabled={uploading}
+      />
       <View>
-        {photoUrl && (
-          <Image
-            src={photoUrl}
-            style={{ height: 200, width: 200, borderRadius: 9999 }}
-          />
-        )}
-        <Button
-          title="Chose profile picture"
-          onPress={pickImage}
-          disabled={uploading}
-        />
         <Input
           placeholder="Store name"
           value={storeName}
@@ -136,9 +134,9 @@ export default function SignUpCustomer() {
           value={address}
           onChangeText={setAddress}
         />
-
-        <Button title="Sign up" onPress={signUp} />
       </View>
+
+      <Button title="Sign up" onPress={signUp} />
     </View>
   );
 }
