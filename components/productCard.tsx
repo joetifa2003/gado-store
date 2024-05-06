@@ -6,17 +6,19 @@ import colors from "@/lib/colors";
 const ProductCard = ({ productData }: { productData: ProductsData }) => {
   return (
     <Pressable style={styles.container}>
-      <View style={styles.imageContainer}>
-        <Image
-          source={{ uri: productData.productImage }}
-          style={styles.image}
-        />
-      </View>
+      <Image source={{ uri: productData.productImage }} style={styles.image} />
       <View style={styles.productInfo}>
-        <Text>{productData.name}</Text>
-        <Text>{productData.price}$</Text>
-        <Text>store name (id for now) : {productData.ownerId}</Text>
-        <Text>Release date</Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={styles.productName}>{productData.name}</Text>
+          <Text style={styles.productPrice}>{productData.price} L.E</Text>
+        </View>
+        <Text>Gado Stores</Text>
       </View>
     </Pressable>
   );
@@ -27,16 +29,14 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: colors.dark,
     display: "flex",
-    flexDirection: "row",
-    padding: 10,
+    flexDirection: "column",
     borderRadius: 8,
-  },
-  imageContainer: {
-    padding: 10,
+    shadowColor: colors.dark,
+    shadowRadius: 16,
   },
   image: {
-    width: 100,
-    height: 100,
+    width: "100%",
+    height: 200,
   },
   productInfo: {
     flex: 1,
@@ -44,10 +44,12 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: 16,
+    fontWeight: "bold",
     marginBottom: 4,
   },
   productPrice: {
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
 

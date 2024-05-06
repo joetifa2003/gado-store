@@ -5,19 +5,19 @@ import Button from "@/components/button";
 import { auth } from "@/lib/firebase";
 import { View } from "react-native";
 
-const Layout = () => {
+const logoutBtn = () => {
   const logout = useCallback(() => {
     auth.signOut();
   }, []);
 
-  const logoutBtn = () => {
-    return (
-      <View style={{ marginRight: 20 }}>
-        <Button title="logout" onPress={logout} />
-      </View>
-    );
-  };
+  return (
+    <View style={{ marginRight: 20 }}>
+      <Button title="logout" onPress={logout} />
+    </View>
+  );
+};
 
+const Layout = () => {
   return (
     <Tabs screenOptions={{ headerStyle: { backgroundColor: colors.accent } }}>
       <Tabs.Screen

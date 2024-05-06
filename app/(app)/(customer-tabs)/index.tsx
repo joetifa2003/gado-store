@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import { productDao } from "@/lib/dao/products";
 import ProductsList from "@/components/productsList";
+
 const Home = () => {
   const products = productDao.getAll();
   return (
@@ -17,7 +18,6 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
   },
 });
 
