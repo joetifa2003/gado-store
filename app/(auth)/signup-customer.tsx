@@ -59,7 +59,7 @@ export default function SignUpCustomer() {
             address: address,
             avatar: photoUrl,
           },
-          password,
+          password
         )
         .then(() => {
           router.replace("/");
