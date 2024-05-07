@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     gap: 32,
     paddingLeft: 8,
     paddingRight: 8,
