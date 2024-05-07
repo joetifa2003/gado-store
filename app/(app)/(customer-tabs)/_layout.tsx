@@ -5,6 +5,7 @@ import Button from "@/components/button";
 import { auth } from "@/lib/firebase";
 import { View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
 
 const logoutBtn = () => {
   const logout = useCallback(() => {
@@ -39,6 +40,16 @@ const Layout = () => {
           tabBarIcon: () => (
             <FontAwesome name="shopping-cart" size={24} color="black" />
           ),
+        }}
+      />
+       <Tabs.Screen
+        name="profile"
+        options={{
+          headerTitle: "Profile",
+          tabBarLabel: "Profile",
+          headerTitleAlign: "center",
+          tabBarIcon:()=><Entypo name="user" size={24} color="black" />,
+          headerRight: () => logoutBtn(),
         }}
       />
     </Tabs>
