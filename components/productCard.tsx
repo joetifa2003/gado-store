@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { ProductsData } from "@/lib/dao/products";
 import colors from "@/lib/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { router } from "expo-router";
 
 const ProductCard = ({
   productData,
@@ -12,7 +13,12 @@ const ProductCard = ({
   deleteProduct?: () => void;
 }) => {
   return (
-    <Pressable style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => {
+        router.navigate(`/product/${productData.id as string}`);
+      }}
+    >
       <Image source={{ uri: productData.productImage }} style={styles.image} />
       <View style={styles.productInfo}>
         <View style={styles.spacingElements}>

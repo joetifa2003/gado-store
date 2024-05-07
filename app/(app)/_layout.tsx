@@ -29,7 +29,7 @@ export default function Layout() {
   }, []);
 
   if (loading) {
-    return (<LoadingScreen />);
+    return <LoadingScreen />;
   }
 
   if (!user) {
@@ -48,7 +48,14 @@ export default function Layout() {
           },
         }}
       >
-        <Stack.Screen name="(customer-tabs)" options={{headerShown:false}} />
+        <Stack.Screen name="(customer-tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="product/[id]/index"
+          options={{
+            headerTitle: "Product",
+            headerStyle: { backgroundColor: colors.accent },
+          }}
+        />
       </Stack>
     </userContext.Provider>
   );
