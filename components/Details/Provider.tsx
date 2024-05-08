@@ -61,7 +61,18 @@ const Provider = ({
       </View>
 
       <View style={{ marginTop: 50, flexDirection: "column", rowGap: 10 }}>
-       
+        <Pressable>
+          <View style={styles.component}>
+            <Entypo name="info" size={24} color="red" />
+            <Text style={{ fontSize: 22 }}> About</Text>
+            <Entypo
+              name="chevron-right"
+              size={24}
+              color="black"
+              style={{ flexDirection: "column-reverse" }}
+            />
+          </View>
+        </Pressable>
       </View>
     </View>
   );
