@@ -1,7 +1,14 @@
 import { productDao } from "@/lib/dao/products";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import { Fontisto } from "@expo/vector-icons";
 import colors from "@/lib/colors";
 import LoadingScreen from "@/components/loadingScreen";
@@ -22,25 +29,34 @@ const SingleProductPage = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.productImg} source={{ uri: product.productImage }} />
-      <View style={styles.spacingElements}>
-        <Text style={styles.productName}>{product.name}</Text>
-        <Text style={styles.productPrice}>{product.price}L.E</Text>
+    <ScrollView style={styles.container}>
+      <View style={{ backgroundColor: colors.dark }}>
+        <Image
+          style={styles.productImg}
+          source={{ uri: product.productImage }}
+        />
+        <View style={styles.spacingElements}>
+          <Text style={styles.productName}>{product.name}</Text>
+          <Text style={styles.productPrice}>{product.price}L.E</Text>
+        </View>
+        <View style={styles.spacingElements}>
+          <Text>store name (id for now) {product.ownerId}</Text>
+          <Pressable>
+            <Fontisto name="shopping-basket-add" size={24} color="black" />
+          </Pressable>
+        </View>
       </View>
-      <View style={styles.spacingElements}>
-        <Text>store name (id for now) {product.ownerId}</Text>
-        <Pressable>
-          <Fontisto name="shopping-basket-add" size={24} color="black" />
-        </Pressable>
+      <View style={styles.descriptionContainer}>
+        <Text style={{ fontSize: 24, fontWeight: "bold" }}>Description : </Text>
+        <Text>This product is blah blah blaaaaaaaaaaahhhhhhhhhhhhhh blah</Text>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.dark,
+    backgroundColor: colors.base,
   },
   productImg: {
     width: "100%",
@@ -63,6 +79,9 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 24,
     fontWeight: "600",
+  },
+  descriptionContainer: {
+    padding: 8,
   },
 });
 
