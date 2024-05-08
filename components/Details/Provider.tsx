@@ -61,6 +61,30 @@ const Provider = ({
       </View>
 
       <View style={{ marginTop: 50, flexDirection: "column", rowGap: 10 }}>
+      <Pressable onPress={addressForm}>
+          <View style={styles.component}>
+            <FontAwesome6 name="location-dot" size={22} color="blue" />
+            <Text style={{ fontSize: szAddress }}> {ads}</Text>
+            <Entypo
+              name="chevron-right"
+              size={24}
+              color="black"
+              style={{ direction: "rtl" }}
+            />
+          </View>
+        </Pressable>
+        <Pressable>
+          <View style={styles.component}>
+            <Feather name="settings" size={28} color="black" />
+            <Text style={{ fontSize: 22 }}> Settings</Text>
+            <Entypo
+              name="chevron-right"
+              size={24}
+              color="black"
+              style={{ flexDirection: "column-reverse" }}
+            />
+          </View>
+        </Pressable>
         <Pressable>
           <View style={styles.component}>
             <Entypo name="info" size={24} color="red" />
