@@ -9,7 +9,7 @@ export default function Avatar({
 }: {
   size: number;
   src?: string;
-  onPress: () => void;
+  onPress?: () => void;
 }) {
   return (
     <Pressable onPress={onPress}>

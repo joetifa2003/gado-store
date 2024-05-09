@@ -56,6 +56,13 @@ export default function Layout() {
             headerStyle: { backgroundColor: colors.accent },
           }}
         />
+        <Stack.Screen
+          name="profile/[id]/index"
+          options={{
+            headerTitle: "Profile",
+            headerStyle: { backgroundColor: colors.accent },
+          }}
+        />
       </Stack>
     </userContext.Provider>
   );
