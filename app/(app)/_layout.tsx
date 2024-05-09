@@ -3,7 +3,6 @@ import { auth } from "@/lib/firebase";
 import { Redirect, Stack } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { View, Text } from "react-native";
 import { userContext } from "@/lib/userContext";
 import { UserData, userDao } from "@/lib/dao/user";
 import LoadingScreen from "@/components/loadingScreen";
@@ -53,6 +52,13 @@ export default function Layout() {
           name="product/[id]/index"
           options={{
             headerTitle: "Product",
+            headerStyle: { backgroundColor: colors.accent },
+          }}
+        />
+        <Stack.Screen
+          name="product/create"
+          options={{
+            headerTitle: "Create Product",
             headerStyle: { backgroundColor: colors.accent },
           }}
         />

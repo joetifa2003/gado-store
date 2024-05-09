@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { UserData, UserType, userDao } from "@/lib/dao/user";
 import LoadingScreen from "@/components/loadingScreen";
 import Avatar from "@/components/avatar";
@@ -14,6 +14,7 @@ const Profile = () => {
   const [user, setUser] = useState<UserData>(null as any);
   const [loading, setLoading] = useState(true);
   const loggedInUser = useContext(userContext);
+  const router = useRouter();
 
   useEffect(() => {
     userDao.get(params.id as string).then((user) => {
@@ -26,8 +27,11 @@ const Profile = () => {
     return <LoadingScreen />;
   }
 
+  const isOwner = user.UID === loggedInUser?.UID;
+  const isOwnerProvider = isOwner && user.type === UserType.PROVIDER;
+
   return (
-    <View>
+    <View style={{ gap: 8 }}>
       <View
         style={{
           display: "flex",
@@ -44,8 +48,18 @@ const Profile = () => {
           <Text>
             {user.type === UserType.CUSTOMER ? "Customer" : "Provider"}
           </Text>
-          {user.UID === loggedInUser?.UID && <LogoutBtn />}
+          {isOwner && <LogoutBtn />}
         </View>
+      </View>
+      <View style={{ padding: 8 }}>
+        {isOwnerProvider && (
+          <Button
+            title="Create product"
+            onPress={() => {
+              router.navigate("/product/create");
+            }}
+          />
+        )}
       </View>
     </View>
   );
