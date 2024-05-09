@@ -19,7 +19,7 @@ const ProductCard = ({
         router.navigate(`/product/${productData.id as string}`);
       }}
     >
-      <Image source={{ uri: productData.productImage }} style={styles.image} />
+      <Image source={{ uri: productData.image }} style={styles.image} />
       <View style={styles.productInfo}>
         <View style={styles.spacingElements}>
           <Text style={styles.productName}>{productData.name}</Text>

@@ -31,10 +31,7 @@ const SingleProductPage = () => {
   return (
     <ScrollView style={styles.container}>
       <View style={{ backgroundColor: colors.dark }}>
-        <Image
-          style={styles.productImg}
-          source={{ uri: product.productImage }}
-        />
+        <Image style={styles.productImg} source={{ uri: product.image }} />
         <View style={styles.spacingElements}>
           <Text style={styles.productName}>{product.name}</Text>
           <Text style={styles.productPrice}>{product.price}L.E</Text>
