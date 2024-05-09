@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { ProductsData } from "@/lib/dao/products";
 import colors from "@/lib/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
+import { userDao } from "@/lib/dao/user";
 
 const ProductCard = ({
   productData,
@@ -12,11 +13,19 @@ const ProductCard = ({
   productData: ProductsData;
   deleteProduct?: () => void;
 }) => {
+  const [storeName, setStoreName] = useState<string | undefined>("");
+
+  userDao.get(productData.ownerId).then((user) => {
+    setStoreName(user.storeName);
+  });
   return (
     <Pressable
       style={styles.container}
       onPress={() => {
-        router.navigate(`/product/${productData.id as string}`);
+        router.navigate({
+          pathname: `/product/${productData.id as string}`,
+          params: { storeName },
+        });
       }}
     >
       <Image source={{ uri: productData.image }} style={styles.image} />
@@ -26,7 +35,7 @@ const ProductCard = ({
           <Text style={styles.productPrice}>{productData.price} L.E</Text>
         </View>
         <View style={styles.spacingElements}>
-          <Text>Gado Stores</Text>
+          <Text>{storeName}</Text>
           {deleteProduct && (
             <Pressable>
               <AntDesign name="delete" size={24} color="black" />

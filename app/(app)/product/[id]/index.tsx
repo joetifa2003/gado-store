@@ -14,7 +14,8 @@ import colors from "@/lib/colors";
 import LoadingScreen from "@/components/loadingScreen";
 
 const SingleProductPage = () => {
-  const { id }: { id: string } = useLocalSearchParams();
+  const { id, storeName }: { id: string; storeName: string } =
+    useLocalSearchParams();
   const [product, setProduct] = useState<ProductsData>();
   const [loading, setLoading] = useState(true);
 
@@ -48,7 +49,7 @@ const SingleProductPage = () => {
           <Text style={styles.productPrice}>{product.price}L.E</Text>
         </View>
         <View style={styles.spacingElements}>
-          <Text>store name (id for now) {product.ownerId}</Text>
+          <Text>{storeName}</Text>
           <Pressable>
             <Fontisto name="shopping-basket-add" size={24} color="black" />
           </Pressable>
