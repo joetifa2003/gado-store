@@ -65,7 +65,15 @@ class ProductsDao {
     });
     return products;
   }
-
+  async deleteFromCart(productId: string , userId: string) {
+    try{
+      const userRef = doc(db, "users", userId);
+      const cartDocRef = doc(userRef, "cart", productId);
+      await deleteDoc(cartDocRef);
+    }catch(err){
+      console.log(err);
+    }
+  }
 }
 
 export const productDao = new ProductsDao();
