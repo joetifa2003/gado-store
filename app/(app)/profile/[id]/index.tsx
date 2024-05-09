@@ -41,6 +41,9 @@ const Profile = () => {
         <View style={{ flex: 1 }}>
           <ProfileName user={user} />
           <Text>{user.address}</Text>
+          <Text>
+            {user.type === UserType.CUSTOMER ? "Customer" : "Provider"}
+          </Text>
           {user.UID === loggedInUser?.UID && <LogoutBtn />}
         </View>
       </View>
