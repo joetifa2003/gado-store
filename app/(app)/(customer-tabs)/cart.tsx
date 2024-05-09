@@ -13,7 +13,7 @@ const Cart = () => {
       setProducts(allProducts);
     };
     fetchAllProduct();
-  }, [products]);
+  }, []);
 
   const deleteProducts = () => {};
 
