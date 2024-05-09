@@ -1,6 +1,6 @@
-import { productDao } from "@/lib/dao/products";
+import { ProductsData, productDao } from "@/lib/dao/products";
 import { useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -14,18 +14,29 @@ import colors from "@/lib/colors";
 import LoadingScreen from "@/components/loadingScreen";
 
 const SingleProductPage = () => {
-  // Todo: getById() in productDao
-  const products = productDao.getAll();
-
   const { id }: { id: string } = useLocalSearchParams();
+  const [product, setProduct] = useState<ProductsData>();
+  const [loading, setLoading] = useState(true);
 
-  const getById = (id: string) => {
-    return products.find((product) => product.id === id);
-  };
-  const product = getById(id);
+  useEffect(() => {
+    const fetchProductData = async () => {
+      const data = await productDao.getById(id);
+      setProduct(data);
+      setLoading(false);
+    };
+    fetchProductData();
+  }, [product]);
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   if (!product) {
-    return <LoadingScreen />;
+    return (
+      <Text style={{ textAlign: "center" }}>
+        This product is not available now
+      </Text>
+    );
   }
 
   return (

@@ -1,24 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { productDao } from "@/lib/dao/products";
+import { ProductsData, productDao } from "@/lib/dao/products";
 import ProductsList from "@/components/productsList";
 import SearchBar from "@/components/searchBar";
 
 const Home = () => {
-  const products = productDao.getAll();
-  const [shownProducts, setShownProducts] = useState(products);
+  const [products, setProducts] = useState<ProductsData[]>([]);
+
   const [searchFor, setSearchFor] = useState("");
-  const handleSearch = (searchFor: string) => {
-    if (searchFor.trim() === "") {
-      setShownProducts(products);
-    } else if (products) {
-      setShownProducts(
-        products.filter((product) =>
-          product.name.toLowerCase().includes(searchFor.toLowerCase())
-        )
-      );
-    }
-  };
+  // const handleSearch = (searchFor: string) => {
+  //   if (searchFor.trim() === "") {
+  //     setShownProducts(products);
+  //   } else if (products) {
+  //     setShownProducts(
+  //       products.filter((product) =>
+  //         product.name.toLowerCase().includes(searchFor.toLowerCase())
+  //       )
+  //     );
+  //   }
+  // };
+
+  useEffect(() => {
+    const fetchAllProduct = async () => {
+      const allProducts = await productDao.getAll();
+      setProducts(allProducts);
+    };
+    fetchAllProduct();
+  }, [products]);
+
+  const handleSearch = () => {};
 
   return (
     <View style={styles.container}>
@@ -26,7 +36,7 @@ const Home = () => {
         handleSearch={handleSearch}
         setSearchFor={(val: string) => setSearchFor(val)}
       />
-      <ProductsList products={shownProducts} />
+      <ProductsList products={products} />
     </View>
   );
 };
