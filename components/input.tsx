@@ -1,5 +1,5 @@
 import colors from "@/lib/colors";
-import { TextInput, TextStyle } from "react-native";
+import { KeyboardTypeOptions, TextInput, TextStyle } from "react-native";
 
 export default function Input({
   placeholder,
@@ -8,6 +8,7 @@ export default function Input({
   style,
   secureTextEntry,
   onSubmit,
+  keyBoardType,
 }: {
   placeholder: string;
   value: string;
@@ -15,6 +16,7 @@ export default function Input({
   style?: TextStyle;
   secureTextEntry?: boolean;
   onSubmit?: () => void;
+  keyBoardType?: KeyboardTypeOptions;
 }) {
   return (
     <TextInput
@@ -29,6 +31,7 @@ export default function Input({
       value={value}
       onChangeText={onChangeText}
       onSubmitEditing={onSubmit}
+      keyboardType={keyBoardType}
     />
   );
 }
