@@ -1,6 +1,6 @@
 import { ProductsData, productDao } from "@/lib/dao/products";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -12,6 +12,7 @@ import {
 import { Fontisto } from "@expo/vector-icons";
 import colors from "@/lib/colors";
 import LoadingScreen from "@/components/loadingScreen";
+import { userContext } from "@/lib/userContext";
 
 const SingleProductPage = () => {
   const { id, storeName }: { id: string; storeName: string } =
@@ -19,6 +20,7 @@ const SingleProductPage = () => {
   const [product, setProduct] = useState<ProductsData>();
   const [loading, setLoading] = useState(true);
 
+  const currentUser = useContext(userContext);
   useEffect(() => {
     const fetchProductData = async () => {
       const data = await productDao.getById(id);
@@ -50,7 +52,13 @@ const SingleProductPage = () => {
         </View>
         <View style={styles.spacingElements}>
           <Text>{storeName}</Text>
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              if (currentUser.UID) {
+                productDao.addToCart(product.id, currentUser.UID);
+              }
+            }}
+          >
             <Fontisto name="shopping-basket-add" size={24} color="black" />
           </Pressable>
         </View>

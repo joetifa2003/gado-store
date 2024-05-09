@@ -1,18 +1,23 @@
 import ProductsList from "@/components/productsList";
 import { ProductsData, productDao } from "@/lib/dao/products";
-import React, { useEffect, useState } from "react";
+import { userContext } from "@/lib/userContext";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 
 const Cart = () => {
-  // for now fetch all products
+  const currentUser = useContext(userContext);
   const [products, setProducts] = useState<ProductsData[]>([]);
 
   useEffect(() => {
-    const fetchAllProduct = async () => {
-      const allProducts = await productDao.getAll();
-      setProducts(allProducts);
+    const fetchAllCartProduct = async () => {
+      if (currentUser.UID) {
+        const allProducts = await productDao.getAllCartProducts(
+          currentUser.UID
+        );
+        setProducts(allProducts);
+      }
     };
-    fetchAllProduct();
+    fetchAllCartProduct();
   }, []);
 
   const deleteProducts = () => {};
