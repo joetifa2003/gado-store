@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
-import { ProductsData } from "@/lib/dao/products";
+import { ProductsData, productDao } from "@/lib/dao/products";
 import colors from "@/lib/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
 import { userDao } from "@/lib/dao/user";
+import { userContext } from "@/lib/userContext";
 
 const ProductCard = ({
   productData,
@@ -14,6 +15,7 @@ const ProductCard = ({
   deleteProduct?: () => void;
 }) => {
   const [storeName, setStoreName] = useState<string | undefined>("");
+  const currentUser = useContext(userContext);
 
   userDao.get(productData.ownerId).then((user) => {
     setStoreName(user.storeName);
@@ -37,7 +39,13 @@ const ProductCard = ({
         <View style={styles.spacingElements}>
           <Text>{storeName}</Text>
           {deleteProduct && (
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                if (currentUser.UID) {
+                  productDao.deleteFromCart(productData.id, currentUser.UID);
+                }
+              }}
+            >
               <AntDesign name="delete" size={24} color="black" />
             </Pressable>
           )}
