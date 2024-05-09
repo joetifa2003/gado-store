@@ -1,5 +1,5 @@
 import colors from "@/lib/colors";
-import { Pressable, Text } from "react-native";
+import { ActivityIndicator, Pressable, Text } from "react-native";
 
 export default function Button({
   onPress,
@@ -17,11 +17,14 @@ export default function Button({
       style={{
         backgroundColor: disabled ? colors.white : colors.primary,
         display: "flex",
+        flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
         padding: 8,
+        gap: 8,
       }}
     >
+      {disabled && <ActivityIndicator />}
       <Text>{title}</Text>
     </Pressable>
   );
