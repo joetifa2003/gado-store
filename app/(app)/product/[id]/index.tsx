@@ -25,7 +25,7 @@ const SingleProductPage = () => {
       setLoading(false);
     };
     fetchProductData();
-  }, [product]);
+  }, [id]);
 
   if (loading) {
     return <LoadingScreen />;
