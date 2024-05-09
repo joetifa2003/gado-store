@@ -16,12 +16,12 @@ import { Platform } from "react-native";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBctvsYSGFc26h_rTvHLyeO3GebKZpRI5A",
-  authDomain: "gado-stores.firebaseapp.com",
-  projectId: "gado-stores",
-  storageBucket: "gado-stores.appspot.com",
-  messagingSenderId: "893346293358",
-  appId: "1:893346293358:web:6ae4f479f587e9a820a87f",
+  apiKey: "AIzaSyD2FVuWh0BwcXCYb0AUzj1OaiQrll8eHfE",
+  authDomain: "gado-stores-2.firebaseapp.com",
+  projectId: "gado-stores-2",
+  storageBucket: "gado-stores-2.appspot.com",
+  messagingSenderId: "440512696987",
+  appId: "1:440512696987:web:f4b2833fab2ff100012c3e",
 };
 
 // Initialize Firebase
