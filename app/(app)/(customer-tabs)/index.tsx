@@ -26,7 +26,7 @@ const Home = () => {
       setProducts(allProducts);
     };
     fetchAllProduct();
-  }, [products]);
+  }, []);
 
   const handleSearch = () => {};
 
