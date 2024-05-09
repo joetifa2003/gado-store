@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  ImageBackground,
-  Settings,
-  Pressable,
-} from "react-native";
+import { StyleSheet, View, Image, Text, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -61,7 +53,7 @@ const Provider = ({
       </View>
 
       <View style={{ marginTop: 50, flexDirection: "column", rowGap: 10 }}>
-      <Pressable onPress={addressForm}>
+        <Pressable onPress={addressForm}>
           <View style={styles.component}>
             <FontAwesome6 name="location-dot" size={22} color="blue" />
             <Text style={{ fontSize: szAddress }}> {ads}</Text>
