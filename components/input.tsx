@@ -9,6 +9,8 @@ export default function Input({
   secureTextEntry,
   onSubmit,
   keyBoardType,
+  multiline,
+  maxlines,
 }: {
   placeholder: string;
   value: string;
@@ -17,6 +19,8 @@ export default function Input({
   secureTextEntry?: boolean;
   onSubmit?: () => void;
   keyBoardType?: KeyboardTypeOptions;
+  multiline?: boolean;
+  maxlines?: number;
 }) {
   return (
     <TextInput
@@ -24,7 +28,7 @@ export default function Input({
       style={{
         backgroundColor: colors.accent,
         width: "100%",
-        height: 40,
+        height: multiline ? undefined : 40,
         ...style,
       }}
       secureTextEntry={secureTextEntry}
@@ -32,6 +36,8 @@ export default function Input({
       onChangeText={onChangeText}
       onSubmitEditing={onSubmit}
       keyboardType={keyBoardType}
+      multiline={multiline}
+      numberOfLines={maxlines}
     />
   );
 }

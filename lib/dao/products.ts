@@ -8,6 +8,7 @@ export type ProductsData = {
   name: string;
   price: number;
   image: string;
+  description: string;
 };
 
 class ProductsDao {
@@ -15,10 +16,16 @@ class ProductsDao {
     await addDoc(collection(db, "products"), product);
   }
 
-  async getAll(order?: string , direction?: string) {
+  async getAll(order?: string, direction?: string) {
     const products: ProductsData[] = [];
     const collectionRef = collection(db, "products");
-    const q = query(collectionRef, orderBy(order ? order : "name", direction ? direction as OrderByDirection : "asc"));
+    const q = query(
+      collectionRef,
+      orderBy(
+        order ? order : "name",
+        direction ? (direction as OrderByDirection) : "asc",
+      ),
+    );
     const snapshot = await getDocs(q);
 
     snapshot.forEach((doc) => {
@@ -31,7 +38,7 @@ class ProductsDao {
     return products;
   }
 
-  async getById(productId: string){
+  async getById(productId: string) {
     const docRef = doc(db, "products", productId);
     const docSnap = await getDoc(docRef);
 
@@ -39,10 +46,10 @@ class ProductsDao {
       return undefined;
     }
     const productData = docSnap.data() as ProductsData;
-      return {
-        ...productData,
-        id: docSnap.id,
-      }
+    return {
+      ...productData,
+      id: docSnap.id,
+    };
   }
 
   async addToCart(productId: string, userId: string) {
@@ -51,7 +58,7 @@ class ProductsDao {
     const userRef = doc(db, "users", userId);
     const cartRef = collection(userRef, "cart");
     const productData = productDoc.data() as ProductsData;
-    await addDoc(cartRef, {...productData , id: productId});
+    await addDoc(cartRef, { ...productData, id: productId });
   }
 
   async getAllCartProducts(userId: string) {
@@ -100,12 +107,13 @@ class ProductsDao {
     });
     return products;
   }
-  async deleteFromCart(productId: string , userId: string) {
-    try{
+
+  async deleteFromCart(productId: string, userId: string) {
+    try {
       const userRef = doc(db, "users", userId);
       const cartDocRef = doc(userRef, "cart", productId);
       await deleteDoc(cartDocRef);
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
   }

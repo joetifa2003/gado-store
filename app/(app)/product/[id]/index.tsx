@@ -64,8 +64,7 @@ const SingleProductPage = () => {
         </View>
       </View>
       <View style={styles.descriptionContainer}>
-        <Text style={{ fontSize: 24, fontWeight: "bold" }}>Description : </Text>
-        <Text>This product is blah blah blaaaaaaaaaaahhhhhhhhhhhhhh blah</Text>
+        <Text>{product.description}</Text>
       </View>
     </ScrollView>
   );

@@ -13,6 +13,7 @@ export default function ProductCreate() {
   const user = useContext(userContext);
 
   const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -44,6 +45,7 @@ export default function ProductCreate() {
         name,
         price: priceNum,
         ownerId: user.UID!,
+        description: desc,
       });
 
       router.back();
@@ -96,6 +98,13 @@ export default function ProductCreate() {
       {image && <Image source={{ uri: image }} height={200} />}
       <Button title="Upload Image" onPress={pickImage} disabled={uploading} />
       <Input placeholder="Product Name" value={name} onChangeText={setName} />
+      <Input
+        placeholder="Product Description"
+        value={desc}
+        onChangeText={setDesc}
+        multiline={true}
+        maxlines={4}
+      />
       <Input
         placeholder="Product Price"
         value={price}
