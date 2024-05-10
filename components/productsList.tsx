@@ -7,7 +7,7 @@ const ProductsList = ({
   products,
   deleteProduct,
 }: {
-  products: ProductsData[];
+  products: any;
   deleteProduct?: () => void;
 }) => {
   return (
