@@ -1,11 +1,7 @@
-import React, { useContext } from "react";
-import { userContext } from "@/lib/userContext";
+import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import ProductCard from "./productCard";
 import { ProductsData } from "@/lib/dao/products";
-import { productDao } from "@/lib/dao/products";
-
-
 
 const ProductsList = ({
   products,
@@ -14,8 +10,6 @@ const ProductsList = ({
   products: ProductsData[];
   deleteProduct?: (item: any) => void;
 }) => {
- 
- 
   return (
     <View style={styles.container}>
       <FlatList
@@ -24,7 +18,7 @@ const ProductsList = ({
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
           return (
-            <ProductCard productData={item} deleteProduct={()=>{}} />
+            <ProductCard productData={item} deleteProduct={deleteProduct} />
           );
         }}
       />

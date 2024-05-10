@@ -44,6 +44,11 @@ const Profile = () => {
       });
   }, [order, direction]);
 
+  const productDelete = async (product: ProductsData) => {
+    await productDao.deleteFromProducts(product.id, user.UID!);
+    fetchProduct();
+  };
+
   useFocusEffect(fetchProduct);
 
   if (loading) {
@@ -59,8 +64,8 @@ const Profile = () => {
     } else if (products) {
       setShownProducts(
         products.filter((product) =>
-          product.name.toLowerCase().includes(searchFor.toLowerCase())
-        )
+          product.name.toLowerCase().includes(searchFor.toLowerCase()),
+        ),
       );
     }
   };
@@ -132,7 +137,10 @@ const Profile = () => {
           handleOptionChange={handleOptionChange}
         />
         {isOwnerProvider ? (
-          <ProductsList products={shownProducts} deleteProduct={()=>{}} />
+          <ProductsList
+            products={shownProducts}
+            deleteProduct={productDelete}
+          />
         ) : (
           <ProductsList products={shownProducts} />
         )}

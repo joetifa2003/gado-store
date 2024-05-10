@@ -99,11 +99,22 @@ class ProductsDao {
     return products;
   }
 
-  async getProductSpecificProviderId(userId: string , order?: string, direction?: string) {
+  async getProductSpecificProviderId(
+    userId: string,
+    order?: string,
+    direction?: string,
+  ) {
     //const userRef = doc(db, "users", userId);
     // const cartCollection = collection(userRef, "cart");
 
-    const q = query(collection(db, "products"), where("ownerId", "==", userId) , orderBy(order ? order : "name" , direction ? (direction as OrderByDirection) : "asc"));
+    const q = query(
+      collection(db, "products"),
+      where("ownerId", "==", userId),
+      orderBy(
+        order ? order : "name",
+        direction ? (direction as OrderByDirection) : "asc",
+      ),
+    );
     const snapshot = await getDocs(q);
     const products: ProductsData[] = [];
     snapshot.forEach((doc) => {
@@ -125,14 +136,12 @@ class ProductsDao {
       console.log(err);
     }
   }
-  async deleteFromProducts(productId: string , userId: string) {
-    await this.deleteFromCart(productId, userId);
-    try{
+  async deleteFromProducts(productId: string, userId: string) {
+    try {
       const cartDocRef = doc(db, "products", productId);
       await deleteDoc(cartDocRef);
       console.log(productId);
     } catch (err) {
-
       console.log(err);
     }
   }

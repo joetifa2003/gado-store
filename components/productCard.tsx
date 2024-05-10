@@ -25,27 +25,6 @@ const ProductCard = ({
       console.log(error);
     }
   });
-  const proAfterDelete = async (id: string) => {
-    console.log("id is " + id);
-
-    try {
-      await productDao.deleteFromProducts(id, user.UID!);
-      const data: ProductsData[] | undefined = [];
-      try {
-        for (let index = 0; index < products!.length; index++) {
-          const element = products![index];
-          if (element.id !== id) {
-            data.push(element);
-          }
-        }
-        setProducts(data);
-      } catch (error) {}
-
-      //setProduct(newArray);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   useEffect(() => {
     userDao.get(productData.ownerId).then((user) => {
@@ -78,7 +57,7 @@ const ProductCard = ({
           {deleteProduct && (
             <Pressable
               onPress={() => {
-                deleteProduct(proAfterDelete(productData.id));
+                deleteProduct(productData);
               }}
             >
               <AntDesign name="delete" size={24} color="black" />
