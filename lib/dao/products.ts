@@ -83,7 +83,12 @@ class ProductsDao {
     for (const doc of snapshot.docs) {
       const cartItem = doc.data() as CartItem;
 
-      const productData = await this.getById(cartItem.productID);
+      let productData;
+      try {
+        productData = await this.getById(cartItem.productID);
+      } catch {
+        continue;
+      }
       products.push({
         ...productData!,
         cartItemID: doc.id,
