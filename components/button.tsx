@@ -22,6 +22,7 @@ export default function Button({
         alignItems: "center",
         padding: 8,
         gap: 8,
+        zIndex: 999,
       }}
     >
       {disabled && <ActivityIndicator />}

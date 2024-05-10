@@ -1,5 +1,6 @@
 import Button from "@/components/button";
 import ProductsList from "@/components/productsList";
+import { orderDao } from "@/lib/dao/orders";
 import { CartItem, productDao } from "@/lib/dao/products";
 import { userContext } from "@/lib/userContext";
 import { useFocusEffect } from "expo-router";
@@ -17,7 +18,6 @@ const Cart = () => {
           currentUser.UID!,
         );
         setProducts(allProducts);
-        console.log(allProducts);
       };
       fetchAllCartProduct();
     }, []),
@@ -28,7 +28,10 @@ const Cart = () => {
     await productDao.deleteFromCart(item.cartItemID, currentUser.UID!);
   };
 
-  const checkout = async () => {};
+  const checkout = async () => {
+    await orderDao.checkout(currentUser.UID!);
+    setProducts([]);
+  };
 
   return (
     <View style={styles.container}>
@@ -37,9 +40,10 @@ const Cart = () => {
         style={{
           width: "100%",
           padding: 8,
+          zIndex: 99,
         }}
       >
-        <Button title="Checkout" onPress={() => ""} />
+        <Button title="Checkout" onPress={checkout} />
       </View>
     </View>
   );

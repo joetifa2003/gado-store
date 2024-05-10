@@ -96,8 +96,6 @@ class ProductsDao {
       });
     }
 
-    console.log(products);
-
     return products;
   }
 
