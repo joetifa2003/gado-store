@@ -44,7 +44,7 @@ const OrderProductsPage = () => {
   useFocusEffect(
     useCallback(() => {
       fetchOrder();
-    }, [id]),
+    }, [id])
   );
 
   const cancelOrder = async () => {
@@ -83,11 +83,21 @@ const OrderProductsPage = () => {
     <>
       <Tabs.Screen options={{ title: `Order ${order.id.split("-")[0]}` }} />
       <View style={{ flex: 1 }}>
-        <View style={{ padding: 8 }}>
+        <View
+          style={{
+            padding: 8,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Text style={styles.info}>
             Order number: {order.id.split("-")[0]}
           </Text>
           <Text style={styles.info}>Total price: {order.totalPrice}</Text>
+        </View>
+        <View style={{ padding: 8 }}>
           <Text style={styles.info}>Status: {order.status}</Text>
         </View>
         <ProductsList products={products} />
