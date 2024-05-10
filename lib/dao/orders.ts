@@ -120,6 +120,9 @@ class OrdersDao {
           products,
           customerID: userID,
           providerID: sellerID,
+          totalPrice: products
+            .map((v) => v.price)
+            .reduce((acc, cur) => acc + cur, 0),
           status: OrderStatus.PENDING,
         });
       }
