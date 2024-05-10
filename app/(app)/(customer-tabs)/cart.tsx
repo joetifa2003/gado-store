@@ -10,6 +10,7 @@ import { StyleSheet, View } from "react-native";
 const Cart = () => {
   const currentUser = useContext(userContext);
   const [cartItem, setProducts] = useState<CartItem[]>([]);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -29,8 +30,14 @@ const Cart = () => {
   };
 
   const checkout = async () => {
-    await orderDao.checkout(currentUser.UID!);
-    setProducts([]);
+    setCheckoutLoading(true);
+    try {
+      await orderDao.checkout(currentUser.UID!);
+      setProducts([]);
+    } catch {
+    } finally {
+      setCheckoutLoading(false);
+    }
   };
 
   return (
@@ -43,7 +50,11 @@ const Cart = () => {
           zIndex: 99,
         }}
       >
-        <Button title="Checkout" onPress={checkout} />
+        <Button
+          title="Checkout"
+          onPress={checkout}
+          disabled={checkoutLoading}
+        />
       </View>
     </View>
   );
