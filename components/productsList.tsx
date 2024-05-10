@@ -15,6 +15,7 @@ const ProductsList = ({
       <FlatList
         contentContainerStyle={styles.listContent}
         data={products}
+        keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
           return (
             <ProductCard productData={item} deleteProduct={deleteProduct} />

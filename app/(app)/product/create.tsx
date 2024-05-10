@@ -87,7 +87,9 @@ export default function ProductCreate() {
     }
   }, []);
 
-  console.log(image);
+
+
+  
 
   return (
     <View style={{ padding: 8, gap: 8 }}>
@@ -101,6 +103,8 @@ export default function ProductCreate() {
         keyBoardType="numeric"
       />
       <Button title="Create Product" onPress={createProduct} />
+      
+      
     </View>
   );
 }

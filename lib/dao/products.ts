@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc , query, where} from "firebase/firestore";
 import { db } from "../firebase";
 
 export type ProductsData = {
@@ -52,7 +52,39 @@ class ProductsDao {
   }
 
   async getAllCartProducts(userId: string) {
+    const userRef = doc(db, "users", userId); 
+    const cartCollection = collection(userRef, "cart");
+    const snapshot = await getDocs(cartCollection);
+    const products: ProductsData[] = [];
+    snapshot.forEach((doc) => {
+      const productData = doc.data() as ProductsData;
+      products.push({
+        ...productData,
+        id: doc.id,
+      });
+    });
+    return products;
+  }
+  async getProductSpecificProviderId(userId: string) {
+    //const userRef = doc(db, "users", userId); 
+   // const cartCollection = collection(userRef, "cart");
+  
+    const q = query(collection(db, "products"), where("ownerId", "==", userId));
+    const snapshot = await getDocs(q);
+    const products: ProductsData[] = [];
+    snapshot.forEach((doc) => {
+      const productData = doc.data() as ProductsData;
+      products.push({
+        ...productData,
+        id: doc.id,
+      });
+    });
+    return products;
+  }
+  async deleteCartProducts(userId: string) {
     const userRef = doc(db, "users", userId);
+    console.log("id is: +" + userId);
+    
     const cartCollection = collection(userRef, "cart");
     const snapshot = await getDocs(cartCollection);
     const products: ProductsData[] = [];
