@@ -1,6 +1,7 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   query,
   runTransaction,
@@ -12,7 +13,7 @@ import uuid from "react-native-uuid";
 import { UserData, userDao } from "./user";
 
 export type productInfo = {
-  id: string;
+  productID: string;
   price: number;
 };
 
@@ -30,6 +31,7 @@ export type OrderData = {
   providerID: string;
   customerID: string;
   provider: UserData;
+  customer: UserData;
 };
 
 class OrdersDao {
@@ -80,6 +82,17 @@ class OrdersDao {
     return this.getAll().find((order) => order.id === id);
   }
 
+  async getOrderByID(id: string) {
+    const ref = doc(db, "orders", id);
+    const orderSnap = await getDoc(ref);
+    const order = orderSnap.data() as OrderData;
+    order.provider = await userDao.get(order.providerID);
+    order.customer = await userDao.get(order.customerID);
+    order.id = orderSnap.id;
+
+    return order;
+  }
+
   async myOrders(userID: string) {
     const q = query(
       collection(db, "orders"),
@@ -90,7 +103,8 @@ class OrdersDao {
     const res: OrderData[] = [];
     for (const doc of querySnapshot.docs) {
       const provider = await userDao.get(doc.data().providerID);
-      res.push({ ...doc.data(), provider, id: doc.id } as OrderData);
+      const customer = await userDao.get(doc.data().providerID);
+      res.push({ ...doc.data(), provider, customer, id: doc.id } as OrderData);
     }
 
     return res;

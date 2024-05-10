@@ -42,7 +42,7 @@ const Orders = () => {
             </Text>
             <ProfileName user={item.provider} />
             <View style={styles.statusContainer}>
-              <Text style={styles.statusText}>status : {item.status}</Text>
+              <Text style={styles.statusText}>Status: {item.status}</Text>
               <Text style={styles.priceText}>Total: {item.totalPrice}</Text>
             </View>
           </Pressable>

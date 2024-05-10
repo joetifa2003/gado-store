@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { ProductsData, productDao } from "@/lib/dao/products";
 import colors from "@/lib/colors";
@@ -15,13 +15,16 @@ const ProductCard = ({
 }) => {
   const [storeName, setStoreName] = useState<string | undefined>("");
 
-  userDao.get(productData.ownerId).then((user) => {
-    try {
-      setStoreName(user.storeName);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  useEffect(() => {
+    userDao.get(productData.ownerId).then((user) => {
+      try {
+        setStoreName(user.storeName);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }, []);
+
   return (
     <Pressable
       style={styles.container}
