@@ -7,6 +7,7 @@ import { userContext } from "@/lib/userContext";
 import { useFocusEffect } from "expo-router";
 import React, { useCallback, useContext, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import Toast from "react-native-toast-message";
 
 const Cart = () => {
   const currentUser = useContext(userContext);
@@ -18,13 +19,13 @@ const Cart = () => {
     useCallback(() => {
       const fetchAllCartProduct = async () => {
         const allProducts = await productDao.getAllCartProducts(
-          currentUser.UID!,
+          currentUser.UID!
         );
         setProducts(allProducts);
         setLoading(false);
       };
       fetchAllCartProduct();
-    }, []),
+    }, [])
   );
 
   const deleteProducts = async (item: CartItem) => {
@@ -37,6 +38,10 @@ const Cart = () => {
     try {
       await orderDao.checkout(currentUser.UID!);
       setProducts([]);
+      Toast.show({
+        type: "success",
+        text1: "Checkout Successful",
+      });
     } catch {
     } finally {
       setCheckoutLoading(false);

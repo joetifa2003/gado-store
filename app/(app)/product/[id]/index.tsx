@@ -13,6 +13,7 @@ import { Fontisto } from "@expo/vector-icons";
 import colors from "@/lib/colors";
 import LoadingScreen from "@/components/loadingScreen";
 import { userContext } from "@/lib/userContext";
+import Toast from "react-native-toast-message";
 
 const SingleProductPage = () => {
   const { id, storeName }: { id: string; storeName: string } =
@@ -58,6 +59,10 @@ const SingleProductPage = () => {
               onPress={() => {
                 if (currentUser.UID) {
                   productDao.addToCart(product.id, currentUser.UID);
+                  Toast.show({
+                    type: "success",
+                    text1: "Added to Cart",
+                  });
                 }
               }}
             >
