@@ -12,13 +12,18 @@ import { StyleSheet, View, Text, FlatList, Pressable } from "react-native";
 const Orders = () => {
   const user = useContext(userContext);
   const [loading, setLoading] = useState(true);
-  const [orders, setOrders] = useState<OrderData[]>([]);
+  const [myOrders, setMyOrders] = useState<OrderData[]>([]);
+  const [manageOrders, setManageOrders] = useState<OrderData[]>([]);
   const [isMyOrders, setIsMyOrders] = useState(true);
 
   const fetchOrders = useCallback(() => {
     setLoading(true);
     orderDao.getAll(user.UID!, isMyOrders).then((res) => {
-      setOrders(res);
+      if (isMyOrders) {
+        setMyOrders(res);
+      } else {
+        setManageOrders(res);
+      }
       setLoading(false);
     });
   }, [isMyOrders]);
@@ -59,7 +64,7 @@ const Orders = () => {
       ) : (
         <FlatList
           contentContainerStyle={styles.container}
-          data={orders}
+          data={isMyOrders ? myOrders : manageOrders}
           renderItem={({ item }) => (
             <Pressable
               style={styles.itemContainer}

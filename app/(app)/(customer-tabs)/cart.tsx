@@ -1,4 +1,5 @@
 import Button from "@/components/button";
+import LoadingScreen from "@/components/loadingScreen";
 import ProductsList from "@/components/productsList";
 import { orderDao } from "@/lib/dao/orders";
 import { CartItem, productDao } from "@/lib/dao/products";
@@ -11,6 +12,7 @@ const Cart = () => {
   const currentUser = useContext(userContext);
   const [cartItem, setProducts] = useState<CartItem[]>([]);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -19,6 +21,7 @@ const Cart = () => {
           currentUser.UID!,
         );
         setProducts(allProducts);
+        setLoading(false);
       };
       fetchAllCartProduct();
     }, []),
@@ -39,6 +42,10 @@ const Cart = () => {
       setCheckoutLoading(false);
     }
   };
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <View style={styles.container}>
