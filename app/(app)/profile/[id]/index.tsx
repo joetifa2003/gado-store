@@ -54,8 +54,6 @@ const Profile = () => {
   const isOwner = user.UID === loggedInUser?.UID;
   const isOwnerProvider = isOwner && user.type === UserType.PROVIDER;
 
-  const handleDelete = () => {};
-
   const handleSearch = (searchFor: string) => {
     if (searchFor.trim() === "") {
       setShownProducts(products);
@@ -127,7 +125,7 @@ const Profile = () => {
           handleOptionChange={handleOptionChange}
         />
         {isOwnerProvider ? (
-          <ProductsList products={shownProducts} deleteProduct={handleDelete} />
+          <ProductsList products={shownProducts} deleteProduct={()=>{}} />
         ) : (
           <ProductsList products={shownProducts} />
         )}

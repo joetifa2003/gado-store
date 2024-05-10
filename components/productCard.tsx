@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { ProductsData, productDao } from "@/lib/dao/products";
 import colors from "@/lib/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
 import { userDao } from "@/lib/dao/user";
+import { userContext } from "@/lib/userContext";
 
 const ProductCard = ({
   productData,
@@ -13,7 +14,10 @@ const ProductCard = ({
   productData: ProductsData;
   deleteProduct?: (item: any) => void;
 }) => {
-  const [storeName, setStoreName] = useState<string | undefined>("");
+  const  user  = useContext(userContext);
+   const [storeName, setStoreName] = useState<string | undefined>("");
+   const [products, setProducts] = useState<ProductsData[] | undefined>([]);
+
 
   userDao.get(productData.ownerId).then((user) => {
     try {
@@ -22,6 +26,27 @@ const ProductCard = ({
       console.log(error);
     }
   });
+  const proAfterDelete = async (id: string) => {
+    console.log("id is " + id);
+
+    try {
+      await productDao.deleteFromProducts(id, user.UID!);
+      const data: ProductsData[] | undefined = [];
+      try {
+        for (let index = 0; index < products!.length; index++) {
+          const element = products![index];
+          if (element.id !== id) {
+            data.push(element);
+          }
+        }
+        setProducts(data);
+      } catch (error) {}
+
+      //setProduct(newArray);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Pressable
       style={styles.container}
@@ -43,7 +68,7 @@ const ProductCard = ({
           {deleteProduct && (
             <Pressable
               onPress={() => {
-                deleteProduct(productData);
+                deleteProduct(proAfterDelete(productData.id));
               }}
             >
               <AntDesign name="delete" size={24} color="black" />

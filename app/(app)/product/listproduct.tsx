@@ -19,15 +19,33 @@ export default function Listproduct() {
 
   const pro = async () => {
     try {
-      const data: ProductsData[] = await productDao.getProductSpecificProviderId(
-        user.UID!
-      );
+      const data: ProductsData[] =
+        await productDao.getProductSpecificProviderId(user.UID!);
       setProduct(data);
     } catch (error) {
       console.log(error);
-      
     }
-   
+  };
+  const proAfterDelete = async (id: string) => {
+    console.log("id is " + id);
+
+    try {
+      await productDao.deleteFromProducts(id, user.UID!);
+      const data: ProductsData[] | undefined = [];
+      try {
+        for (let index = 0; index < producto!.length; index++) {
+          const element = producto![index];
+          if (element.id !== id) {
+            data.push(element);
+          }
+        }
+        setProduct(data);
+      } catch (error) {}
+
+      //setProduct(newArray);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -41,7 +59,7 @@ export default function Listproduct() {
               <ProductCard
                 productData={item}
                 deleteProduct={() => {
-                  ("");
+                  proAfterDelete(item.id);
                 }}
               />
             </View>
@@ -91,5 +109,3 @@ const styles = StyleSheet.create({
     padding: 8,
   },
 });
-
-
