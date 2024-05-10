@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ProductsData, productDao } from "@/lib/dao/products";
 import ProductsList from "@/components/productsList";
 import SearchBar from "@/components/searchBar";
 import SortingMenu from "@/components/sortingMenu";
+import { useFocusEffect } from "expo-router";
 
 const Home = () => {
   const [products, setProducts] = useState<ProductsData[]>([]);
@@ -19,8 +20,8 @@ const Home = () => {
     } else if (products) {
       setShownProducts(
         products.filter((product) =>
-          product.name.toLowerCase().includes(searchFor.toLowerCase())
-        )
+          product.name.toLowerCase().includes(searchFor.toLowerCase()),
+        ),
       );
     }
   };
@@ -42,13 +43,19 @@ const Home = () => {
         setDirection("asc");
     }
   };
+  const fetchAllProduct = useCallback(async () => {
+    const allProducts = await productDao.getAll(order, direction);
+    setProducts(allProducts);
+    setShownProducts(allProducts);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAllProduct();
+    }, []),
+  );
 
   useEffect(() => {
-    const fetchAllProduct = async () => {
-      const allProducts = await productDao.getAll(order, direction);
-      setProducts(allProducts);
-      setShownProducts(allProducts);
-    };
     fetchAllProduct();
   }, [order, direction]);
 
