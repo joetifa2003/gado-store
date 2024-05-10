@@ -16,14 +16,11 @@ const ProductCard = ({
   const [storeName, setStoreName] = useState<string | undefined>("");
 
   userDao.get(productData.ownerId).then((user) => {
-    
-  try {
-    setStoreName(user.storeName);
-  } catch (error) {
-    console.log(error);
-    
-  }
-   
+    try {
+      setStoreName(user.storeName);
+    } catch (error) {
+      console.log(error);
+    }
   });
   return (
     <Pressable
