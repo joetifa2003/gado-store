@@ -37,11 +37,13 @@ const Cart = () => {
     setCheckoutLoading(true);
     try {
       await orderDao.checkout(currentUser.UID!);
+      if (cartItem.length > 0) {
+        Toast.show({
+          type: "success",
+          text1: "Checkout Successful",
+        });
+      }
       setProducts([]);
-      Toast.show({
-        type: "success",
-        text1: "Checkout Successful",
-      });
     } catch {
     } finally {
       setCheckoutLoading(false);
