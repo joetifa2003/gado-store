@@ -1,53 +1,84 @@
+import Button from "@/components/button";
 import LoadingScreen from "@/components/loadingScreen";
 import { ProfileName } from "@/components/profileName";
 import colors from "@/lib/colors";
 import { OrderData, orderDao } from "@/lib/dao/orders";
+import { UserType } from "@/lib/dao/user";
 import { userContext } from "@/lib/userContext";
 import { router, useFocusEffect } from "expo-router";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Text, FlatList, Pressable } from "react-native";
 
 const Orders = () => {
   const user = useContext(userContext);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState<OrderData[]>([]);
+  const [isMyOrders, setIsMyOrders] = useState(true);
 
-  useFocusEffect(
-    useCallback(() => {
-      orderDao.myOrders(user.UID!).then((res) => {
-        setOrders(res);
-        setLoading(false);
-      });
-    }, []),
-  );
+  const fetchOrders = useCallback(() => {
+    setLoading(true);
+    orderDao.getAll(user.UID!, isMyOrders).then((res) => {
+      setOrders(res);
+      setLoading(false);
+    });
+  }, [isMyOrders]);
 
-  if (loading) {
-    return <LoadingScreen />;
-  }
+  useFocusEffect(fetchOrders);
 
   return (
-    <View>
-      <FlatList
-        contentContainerStyle={styles.container}
-        data={orders}
-        renderItem={({ item }) => (
-          <Pressable
-            style={styles.itemContainer}
-            onPress={() => {
-              router.navigate(`/order/${item.id}`);
+    <View style={{ flex: 1 }}>
+      {user.type === UserType.PROVIDER && (
+        <View
+          style={{ display: "flex", flexDirection: "row", gap: 8, padding: 8 }}
+        >
+          <Button
+            style={{
+              flex: 1,
+              backgroundColor: isMyOrders ? colors.primary : colors.dark,
             }}
-          >
-            <Text style={styles.orderId}>
-              Order id : {item.id.split("-")[0]}
-            </Text>
-            <ProfileName user={item.provider} />
-            <View style={styles.statusContainer}>
-              <Text style={styles.statusText}>Status: {item.status}</Text>
-              <Text style={styles.priceText}>Total: {item.totalPrice}</Text>
-            </View>
-          </Pressable>
-        )}
-      />
+            title="Manage orders"
+            onPress={() => {
+              setIsMyOrders(false);
+            }}
+          />
+          <Button
+            style={{
+              flex: 1,
+              backgroundColor: isMyOrders ? colors.dark : colors.primary,
+            }}
+            title="My orders"
+            onPress={() => {
+              setIsMyOrders(true);
+            }}
+          />
+        </View>
+      )}
+
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <FlatList
+          contentContainerStyle={styles.container}
+          data={orders}
+          renderItem={({ item }) => (
+            <Pressable
+              style={styles.itemContainer}
+              onPress={() => {
+                router.navigate(`/order/${item.id}`);
+              }}
+            >
+              <Text style={styles.orderId}>
+                Order id : {item.id.split("-")[0]}
+              </Text>
+              <ProfileName user={isMyOrders ? item.provider : item.customer} />
+              <View style={styles.statusContainer}>
+                <Text style={styles.statusText}>Status: {item.status}</Text>
+                <Text style={styles.priceText}>Total: {item.totalPrice}</Text>
+              </View>
+            </Pressable>
+          )}
+        />
+      )}
     </View>
   );
 };

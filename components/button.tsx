@@ -5,10 +5,12 @@ export default function Button({
   onPress,
   title,
   disabled,
+  style = {},
 }: {
   title: string;
   onPress: () => void;
   disabled?: boolean;
+  style?: any;
 }) {
   return (
     <Pressable
@@ -23,6 +25,7 @@ export default function Button({
         padding: 8,
         gap: 8,
         zIndex: 999,
+        ...style,
       }}
     >
       {disabled && <ActivityIndicator />}

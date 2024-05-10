@@ -1,10 +1,16 @@
 import Button from "@/components/button";
 import LoadingScreen from "@/components/loadingScreen";
 import ProductsList from "@/components/productsList";
-import { OrderData, orderDao, productInfo } from "@/lib/dao/orders";
+import {
+  OrderData,
+  OrderStatus,
+  orderDao,
+  productInfo,
+} from "@/lib/dao/orders";
 import { ProductsData, productDao } from "@/lib/dao/products";
+import { userContext } from "@/lib/userContext";
 import { Tabs, useFocusEffect, useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 
 const OrderProductsPage = () => {
@@ -12,6 +18,7 @@ const OrderProductsPage = () => {
   const [order, setOrder] = useState<OrderData | null>(null);
   const [products, setProducts] = useState<ProductsData[]>([]);
   const [loading, setLoading] = useState(true);
+  const user = useContext(userContext);
 
   const fetchOrder = async () => {
     const order = await orderDao.getOrderByID(id);
@@ -25,12 +32,12 @@ const OrderProductsPage = () => {
       }
     }
 
-    console.log(products);
-
     setProducts(products);
     setOrder(order);
     setLoading(false);
   };
+
+  const isProvider = order?.providerID === user.UID;
 
   useFocusEffect(
     useCallback(() => {
@@ -39,7 +46,12 @@ const OrderProductsPage = () => {
   );
 
   const cancelOrder = async () => {
-    await orderDao.cancelOrder(order!.id);
+    await orderDao.changeStatus(order!.id, OrderStatus.CANCELLED);
+    await fetchOrder();
+  };
+
+  const markAsCompleted = async () => {
+    await orderDao.changeStatus(order!.id, OrderStatus.COMPLETED);
     await fetchOrder();
   };
 
@@ -64,7 +76,16 @@ const OrderProductsPage = () => {
           <Text style={styles.info}>Status: {order.status}</Text>
         </View>
         <ProductsList products={products} />
-        <Button title="Cancel order" onPress={cancelOrder} />
+        <View style={{ gap: 8 }}>
+          {order.status === OrderStatus.PENDING ? (
+            <>
+              {isProvider && (
+                <Button title="Mark as completed" onPress={markAsCompleted} />
+              )}
+              <Button title="Cancel order" onPress={cancelOrder} />
+            </>
+          ) : null}
+        </View>
       </View>
     </>
   );

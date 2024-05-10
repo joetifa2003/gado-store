@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import colors from "@/lib/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -30,7 +30,6 @@ const Layout = () => {
           ),
         }}
       />
-
       <Tabs.Screen
         name="orders"
         options={{

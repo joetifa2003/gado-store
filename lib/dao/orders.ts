@@ -1,8 +1,10 @@
 import {
+  Timestamp,
   collection,
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   runTransaction,
   updateDoc,
@@ -36,53 +38,6 @@ export type OrderData = {
 };
 
 class OrdersDao {
-  getAll() {
-    return [
-      {
-        id: "xamc-1kao-liqu",
-        totalPrice: 90,
-        status: "completed",
-        productList: [
-          {
-            id: "UWFqLTViZM7aJEyZ1ETF",
-            price: 40,
-          },
-          {
-            id: "BQEbVrvBGX75cTRctuqM",
-            price: 20,
-          },
-          {
-            id: "zpwflkNvLQYVhJcHUAZs",
-            price: 30,
-          },
-        ],
-      },
-      {
-        id: "yund-oqiw-1kao",
-        totalPrice: 150,
-        status: "completed",
-        productList: [
-          {
-            id: "UWFqLTViZM7aJEyZ1ETF",
-            price: 40,
-          },
-          {
-            id: "BQEbVrvBGX75cTRctuqM",
-            price: 20,
-          },
-          {
-            id: "zpwflkNvLQYVhJcHUAZs",
-            price: 30,
-          },
-        ],
-      },
-    ];
-  }
-
-  getById(id: string) {
-    return this.getAll().find((order) => order.id === id);
-  }
-
   async getOrderByID(id: string) {
     const ref = doc(db, "orders", id);
     const orderSnap = await getDoc(ref);
@@ -94,22 +49,25 @@ class OrdersDao {
     return order;
   }
 
-  async cancelOrder(orderID: string) {
+  async changeStatus(orderID: string, status: OrderStatus) {
     const ref = doc(db, "orders", orderID);
-    await updateDoc(ref, { status: OrderStatus.CANCELLED });
+    await updateDoc(ref, { status });
   }
 
-  async myOrders(userID: string) {
+  async getAll(userID: string, myOders: boolean) {
     const q = query(
       collection(db, "orders"),
-      where("customerID", "==", userID),
+      where(myOders ? "customerID" : "providerID", "==", userID),
+      orderBy("timestamp", "desc"),
     );
     const querySnapshot = await getDocs(q);
 
     const res: OrderData[] = [];
     for (const doc of querySnapshot.docs) {
-      const provider = await userDao.get(doc.data().providerID);
-      const customer = await userDao.get(doc.data().providerID);
+      const [provider, customer] = await Promise.all([
+        userDao.get(doc.data().providerID),
+        userDao.get(doc.data().customerID),
+      ]);
       res.push({ ...doc.data(), provider, customer, id: doc.id } as OrderData);
     }
 
@@ -144,6 +102,7 @@ class OrdersDao {
             .map((v) => v.price)
             .reduce((acc, cur) => acc + cur, 0),
           status: OrderStatus.PENDING,
+          timestamp: Timestamp.now(),
         });
       }
     });
