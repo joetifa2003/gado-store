@@ -1,5 +1,16 @@
-
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc ,  orderBy, OrderByDirection, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  orderBy,
+  OrderByDirection,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../firebase";
 
 export type ProductsData = {
@@ -9,6 +20,11 @@ export type ProductsData = {
   price: number;
   image: string;
   description: string;
+};
+
+export type CartItem = ProductsData & {
+  cartItemID: string;
+  productID: string;
 };
 
 class ProductsDao {
@@ -53,32 +69,37 @@ class ProductsDao {
   }
 
   async addToCart(productId: string, userId: string) {
-    const productRef = doc(db, "products", productId);
-    const productDoc = await getDoc(productRef);
     const userRef = doc(db, "users", userId);
     const cartRef = collection(userRef, "cart");
-    const productData = productDoc.data() as ProductsData;
-    await addDoc(cartRef, { ...productData, id: productId });
+    await addDoc(cartRef, { productID: productId });
   }
 
   async getAllCartProducts(userId: string) {
-    const userRef = doc(db, "users", userId); 
+    const userRef = doc(db, "users", userId);
     const cartCollection = collection(userRef, "cart");
     const snapshot = await getDocs(cartCollection);
-    const products: ProductsData[] = [];
-    snapshot.forEach((doc) => {
-      const productData = doc.data() as ProductsData;
+
+    const products: CartItem[] = [];
+    for (const doc of snapshot.docs) {
+      const cartItem = doc.data() as CartItem;
+
+      const productData = await this.getById(cartItem.productID);
       products.push({
-        ...productData,
-        id: doc.id,
+        ...productData!,
+        cartItemID: doc.id,
+        productID: productData?.id!,
       });
-    });
+    }
+
+    console.log(products);
+
     return products;
   }
+
   async getProductSpecificProviderId(userId: string) {
-    //const userRef = doc(db, "users", userId); 
-   // const cartCollection = collection(userRef, "cart");
-  
+    //const userRef = doc(db, "users", userId);
+    // const cartCollection = collection(userRef, "cart");
+
     const q = query(collection(db, "products"), where("ownerId", "==", userId));
     const snapshot = await getDocs(q);
     const products: ProductsData[] = [];
@@ -91,28 +112,12 @@ class ProductsDao {
     });
     return products;
   }
-  async deleteCartProducts(userId: string) {
-    const userRef = doc(db, "users", userId);
-    console.log("id is: +" + userId);
-    
-    const cartCollection = collection(userRef, "cart");
-    const snapshot = await getDocs(cartCollection);
-    const products: ProductsData[] = [];
-    snapshot.forEach((doc) => {
-      const productData = doc.data() as ProductsData;
-      products.push({
-        ...productData,
-        id: doc.id,
-      });
-    });
-    return products;
-  }
 
-  async deleteFromCart(productId: string, userId: string) {
+  async deleteFromCart(cartItemID: string, userId: string) {
     try {
       const userRef = doc(db, "users", userId);
-      const cartDocRef = doc(userRef, "cart", productId);
-      await deleteDoc(cartDocRef);
+      const cartCollection = doc(userRef, "cart", cartItemID);
+      await deleteDoc(cartCollection);
     } catch (err) {
       console.log(err);
     }

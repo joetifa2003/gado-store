@@ -1,12 +1,13 @@
 import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import ProductCard from "./productCard";
+import { ProductsData } from "@/lib/dao/products";
 
 const ProductsList = ({
   products,
   deleteProduct,
 }: {
-  products: any;
+  products: ProductsData[];
   deleteProduct?: (id: string) => void;
 }) => {
   return (
