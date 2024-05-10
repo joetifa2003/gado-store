@@ -1,4 +1,5 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc , query, where} from "firebase/firestore";
+
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, setDoc ,  orderBy, OrderByDirection, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 
 export type ProductsData = {
@@ -14,9 +15,11 @@ class ProductsDao {
     await addDoc(collection(db, "products"), product);
   }
 
-  async getAll(){
+  async getAll(order?: string , direction?: string) {
     const products: ProductsData[] = [];
-    const snapshot = await getDocs(collection(db, "products"));
+    const collectionRef = collection(db, "products");
+    const q = query(collectionRef, orderBy(order ? order : "name", direction ? direction as OrderByDirection : "asc"));
+    const snapshot = await getDocs(q);
 
     snapshot.forEach((doc) => {
       const productData = doc.data() as ProductsData;
@@ -97,7 +100,15 @@ class ProductsDao {
     });
     return products;
   }
-
+  async deleteFromCart(productId: string , userId: string) {
+    try{
+      const userRef = doc(db, "users", userId);
+      const cartDocRef = doc(userRef, "cart", productId);
+      await deleteDoc(cartDocRef);
+    }catch(err){
+      console.log(err);
+    }
+  }
 }
 
 export const productDao = new ProductsDao();

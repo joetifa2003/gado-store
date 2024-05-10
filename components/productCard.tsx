@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
-import { ProductsData } from "@/lib/dao/products";
+import { ProductsData, productDao } from "@/lib/dao/products";
 import colors from "@/lib/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
@@ -11,7 +11,7 @@ const ProductCard = ({
   deleteProduct,
 }: {
   productData: ProductsData;
-  deleteProduct?: () => void;
+  deleteProduct?: (id: string) => void;
 }) => {
   const [storeName, setStoreName] = useState<string | undefined>("");
 
@@ -44,7 +44,11 @@ const ProductCard = ({
         <View style={styles.spacingElements}>
           <Text>{storeName}</Text>
           {deleteProduct && (
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                deleteProduct(productData.id);
+              }}
+            >
               <AntDesign name="delete" size={24} color="black" />
             </Pressable>
           )}

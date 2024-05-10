@@ -12,7 +12,7 @@ const Cart = () => {
     const fetchAllCartProduct = async () => {
       if (currentUser.UID) {
         const allProducts = await productDao.getAllCartProducts(
-          currentUser.UID
+          currentUser.UID,
         );
         setProducts(allProducts);
       }
@@ -20,7 +20,10 @@ const Cart = () => {
     fetchAllCartProduct();
   }, []);
 
-  const deleteProducts = () => {};
+  const deleteProducts = async (id: string) => {
+    setProducts(products.filter((p) => p.id !== id));
+    await productDao.deleteFromCart(id, currentUser.UID!);
+  };
 
   return (
     <View style={styles.container}>
