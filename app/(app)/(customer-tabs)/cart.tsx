@@ -23,9 +23,9 @@ const Cart = () => {
     }, []),
   );
 
-  const deleteProducts = async (id: string) => {
-    setProducts(cartItem.filter((p) => p.id !== id));
-    await productDao.deleteFromCart(id, currentUser.UID!);
+  const deleteProducts = async (item: CartItem) => {
+    setProducts(cartItem.filter((p) => p.cartItemID !== item.cartItemID));
+    await productDao.deleteFromCart(item.cartItemID, currentUser.UID!);
   };
 
   const checkout = async () => {};

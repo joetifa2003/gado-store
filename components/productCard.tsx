@@ -11,7 +11,7 @@ const ProductCard = ({
   deleteProduct,
 }: {
   productData: ProductsData;
-  deleteProduct?: (id: string) => void;
+  deleteProduct?: (item: any) => void;
 }) => {
   const [storeName, setStoreName] = useState<string | undefined>("");
 
@@ -43,7 +43,7 @@ const ProductCard = ({
           {deleteProduct && (
             <Pressable
               onPress={() => {
-                deleteProduct(productData.id);
+                deleteProduct(productData);
               }}
             >
               <AntDesign name="delete" size={24} color="black" />

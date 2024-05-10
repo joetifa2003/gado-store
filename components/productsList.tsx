@@ -8,7 +8,7 @@ const ProductsList = ({
   deleteProduct,
 }: {
   products: ProductsData[];
-  deleteProduct?: (id: string) => void;
+  deleteProduct?: (item: any) => void;
 }) => {
   return (
     <View style={styles.container}>
