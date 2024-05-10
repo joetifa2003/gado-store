@@ -127,24 +127,26 @@ const Profile = () => {
           />
         )}
       </View>
-      <View style={{ width: "100%", flex: 1, backgroundColor: colors.white }}>
-        <SearchBar
-          handleSearch={handleSearch}
-          setSearchFor={(val: string) => setSearchFor(val)}
-        />
-        <SortingMenu
-          selectedOption={selectedOption}
-          handleOptionChange={handleOptionChange}
-        />
-        {isOwnerProvider ? (
-          <ProductsList
-            products={shownProducts}
-            deleteProduct={productDelete}
+      {user.type === UserType.PROVIDER && (
+        <View style={{ width: "100%", flex: 1, backgroundColor: colors.white }}>
+          <SearchBar
+            handleSearch={handleSearch}
+            setSearchFor={(val: string) => setSearchFor(val)}
           />
-        ) : (
-          <ProductsList products={shownProducts} />
-        )}
-      </View>
+          <SortingMenu
+            selectedOption={selectedOption}
+            handleOptionChange={handleOptionChange}
+          />
+          {isOwnerProvider ? (
+            <ProductsList
+              products={shownProducts}
+              deleteProduct={productDelete}
+            />
+          ) : (
+            <ProductsList products={shownProducts} />
+          )}
+        </View>
+      )}
     </View>
   );
 };
