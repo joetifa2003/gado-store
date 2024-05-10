@@ -1,11 +1,29 @@
 import colors from "@/lib/colors";
-import { orderDao } from "@/lib/dao/orders";
+import { OrderData, orderDao } from "@/lib/dao/orders";
+import { userContext } from "@/lib/userContext";
 import { router } from "expo-router";
-import React from "react";
+import React, {
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useState,
+} from "react";
 import { StyleSheet, View, Text, FlatList, Pressable } from "react-native";
 
 const Orders = () => {
-  const orders = orderDao.getAll();
+  const user = useContext(userContext);
+  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState<OrderData[]>([]);
+
+  useLayoutEffect(
+    useCallback(() => {
+      orderDao.myOrders(user.UID!).then((res) => {
+        setOrders(res);
+        setLoading(false);
+      });
+    }, []),
+  );
+
   return (
     <View>
       <FlatList
@@ -18,12 +36,12 @@ const Orders = () => {
               router.navigate(`/order/${item.id}`);
             }}
           >
-            <Text style={styles.orderId}>Order id : {item.id}</Text>
+            <Text style={styles.orderId}>
+              Order id : {item.id.split("-")[0]}
+            </Text>
             <View style={styles.statusContainer}>
               <Text style={styles.statusText}>status : {item.status}</Text>
-              <Text style={styles.priceText}>
-                total Price : {item.totalPrice}
-              </Text>
+              <Text style={styles.priceText}>Total: {item.totalPrice}</Text>
             </View>
           </Pressable>
         )}
@@ -35,13 +53,12 @@ const Orders = () => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    backgroundColor: colors.base,
   },
   itemContainer: {
     padding: 16,
     marginVertical: 8,
     marginHorizontal: 16,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.dark,
     borderRadius: 8,
     shadowColor: colors.dark,
     shadowOpacity: 0.3,

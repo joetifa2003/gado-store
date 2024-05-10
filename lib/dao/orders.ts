@@ -1,7 +1,15 @@
-import { doc, runTransaction } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  runTransaction,
+  where,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { productDao } from "./products";
 import uuid from "react-native-uuid";
+import { UserData, userDao } from "./user";
 
 export type productInfo = {
   id: string;
@@ -18,7 +26,10 @@ export type OrderData = {
   id: string;
   totalPrice: number;
   status: OrderStatus;
-  productList: productInfo[];
+  products: productInfo[];
+  providerID: string;
+  customerID: string;
+  provider: UserData;
 };
 
 class OrdersDao {
@@ -69,24 +80,46 @@ class OrdersDao {
     return this.getAll().find((order) => order.id === id);
   }
 
+  async myOrders(userID: string) {
+    const q = query(
+      collection(db, "orders"),
+      where("customerID", "==", userID),
+    );
+    const querySnapshot = await getDocs(q);
+
+    const res: OrderData[] = [];
+    for (const doc of querySnapshot.docs) {
+      const provider = await userDao.get(doc.data().providerID);
+      res.push({ ...doc.data(), provider, id: doc.id } as OrderData);
+    }
+
+    return res;
+  }
+
   async checkout(userID: string) {
     await runTransaction(db, async (tx) => {
       const cartItems = await productDao.getAllCartProducts(userID);
-      const sellerProducts = new Map<string, string[]>();
+      const sellerProducts = new Map<
+        string,
+        { productID: string; price: number }[]
+      >();
 
       for (const item of cartItems) {
         if (!sellerProducts.has(item.ownerId)) {
           sellerProducts.set(item.ownerId, []);
         }
 
-        sellerProducts.get(item.ownerId)?.push(item.productID);
+        sellerProducts
+          .get(item.ownerId)
+          ?.push({ productID: item.productID, price: item.price });
         tx.delete(doc(db, "users", userID, "cart", item.cartItemID));
       }
 
-      for (const [sellerID, productIDs] of sellerProducts) {
-        tx.set(doc(db, "users", sellerID, "orders", uuid.v4().toString()), {
-          productIDs,
-          userID,
+      for (const [sellerID, products] of sellerProducts) {
+        tx.set(doc(db, "orders", uuid.v4().toString()), {
+          products,
+          customerID: userID,
+          providerID: sellerID,
           status: OrderStatus.PENDING,
         });
       }

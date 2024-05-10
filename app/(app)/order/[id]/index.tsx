@@ -15,7 +15,7 @@ const OrderProductsPage = () => {
     const products = await Promise.all(
       productsInfo.map(async (item) => {
         return await productDao.getById(item.id);
-      })
+      }),
     );
     return products;
   };
