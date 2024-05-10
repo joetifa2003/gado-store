@@ -53,7 +53,13 @@ const ProductCard = ({
           <Text style={styles.productPrice}>{productData.price} L.E</Text>
         </View>
         <View style={styles.spacingElements}>
-          <Text>{storeName}</Text>
+          <Pressable
+            onPress={() => {
+              router.navigate(`profile/${productData.ownerId}`);
+            }}
+          >
+            <Text>{storeName}</Text>
+          </Pressable>
           {deleteProduct && (
             <Pressable
               onPress={() => {
