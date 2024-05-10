@@ -5,17 +5,15 @@ import colors from "@/lib/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
 import { userDao } from "@/lib/dao/user";
-import { userContext } from "@/lib/userContext";
 
 const ProductCard = ({
   productData,
   deleteProduct,
 }: {
   productData: ProductsData;
-  deleteProduct?: () => void;
+  deleteProduct?: (id: string) => void;
 }) => {
   const [storeName, setStoreName] = useState<string | undefined>("");
-  const currentUser = useContext(userContext);
 
   userDao.get(productData.ownerId).then((user) => {
     setStoreName(user.storeName);
@@ -41,9 +39,7 @@ const ProductCard = ({
           {deleteProduct && (
             <Pressable
               onPress={() => {
-                if (currentUser.UID) {
-                  productDao.deleteFromCart(productData.id, currentUser.UID);
-                }
+                deleteProduct(productData.id);
               }}
             >
               <AntDesign name="delete" size={24} color="black" />
