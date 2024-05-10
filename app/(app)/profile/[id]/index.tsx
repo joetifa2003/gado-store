@@ -12,6 +12,7 @@ import ProductsList from "@/components/productsList";
 import { ProductsData, productDao } from "@/lib/dao/products";
 import SearchBar from "@/components/searchBar";
 import SortingMenu from "@/components/sortingMenu";
+import { ProfileName } from "@/components/profileName";
 
 const Profile = () => {
   const params = useLocalSearchParams();
@@ -39,7 +40,7 @@ const Profile = () => {
       const fetchedProducts = await productDao.getProductSpecificProviderId(
         params.id as string,
         order,
-        direction
+        direction,
       );
       setProducts(fetchedProducts);
       setShownProducts(fetchedProducts);
@@ -62,8 +63,8 @@ const Profile = () => {
     } else if (products) {
       setShownProducts(
         products.filter((product) =>
-          product.name.toLowerCase().includes(searchFor.toLowerCase())
-        )
+          product.name.toLowerCase().includes(searchFor.toLowerCase()),
+        ),
       );
     }
   };
@@ -136,18 +137,6 @@ const Profile = () => {
   );
 };
 
-const ProfileName = ({ user }: { user: UserData }) => {
-  if (user.type === UserType.CUSTOMER) {
-    return (
-      <Text style={styles.profileName}>
-        {user.firstName} {user.lastName}
-      </Text>
-    );
-  }
-
-  return <Text style={styles.profileName}>{user.storeName}</Text>;
-};
-
 const LogoutBtn = () => {
   const logout = useCallback(() => {
     auth.signOut();
@@ -159,12 +148,5 @@ const LogoutBtn = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  profileName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
 
 export default Profile;
