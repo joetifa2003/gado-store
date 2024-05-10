@@ -20,7 +20,8 @@ const SortingMenu = ({
           handleOptionChange(itemValue);
         }}
       >
-        <Picker.Item label="Select Option" value="" />
+        <Picker.Item label="Alphabetical A to Z" value="alpha_asc" />
+        <Picker.Item label="Alphabetical Z to A" value="alpha_desc" />
         <Picker.Item label="Price low to high" value="price_asc" />
         <Picker.Item label="Price high to low" value="price_desc" />
       </Picker>

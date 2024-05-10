@@ -1,10 +1,22 @@
-import { doc, runTransaction } from "firebase/firestore";
+import {
+  Timestamp,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  runTransaction,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { productDao } from "./products";
 import uuid from "react-native-uuid";
+import { UserData, userDao } from "./user";
 
 export type productInfo = {
-  id: string;
+  productID: string;
   price: number;
 };
 
@@ -18,76 +30,79 @@ export type OrderData = {
   id: string;
   totalPrice: number;
   status: OrderStatus;
-  productList: productInfo[];
+  products: productInfo[];
+  providerID: string;
+  customerID: string;
+  provider: UserData;
+  customer: UserData;
 };
 
 class OrdersDao {
-  getAll() {
-    return [
-      {
-        id: "xamc-1kao-liqu",
-        totalPrice: 90,
-        status: "completed",
-        productList: [
-          {
-            id: "UWFqLTViZM7aJEyZ1ETF",
-            price: 40,
-          },
-          {
-            id: "BQEbVrvBGX75cTRctuqM",
-            price: 20,
-          },
-          {
-            id: "zpwflkNvLQYVhJcHUAZs",
-            price: 30,
-          },
-        ],
-      },
-      {
-        id: "yund-oqiw-1kao",
-        totalPrice: 150,
-        status: "completed",
-        productList: [
-          {
-            id: "UWFqLTViZM7aJEyZ1ETF",
-            price: 40,
-          },
-          {
-            id: "BQEbVrvBGX75cTRctuqM",
-            price: 20,
-          },
-          {
-            id: "zpwflkNvLQYVhJcHUAZs",
-            price: 30,
-          },
-        ],
-      },
-    ];
+  async getOrderByID(id: string) {
+    const ref = doc(db, "orders", id);
+    const orderSnap = await getDoc(ref);
+    const order = orderSnap.data() as OrderData;
+    order.provider = await userDao.get(order.providerID);
+    order.customer = await userDao.get(order.customerID);
+    order.id = orderSnap.id;
+
+    return order;
   }
 
-  getById(id: string) {
-    return this.getAll().find((order) => order.id === id);
+  async changeStatus(orderID: string, status: OrderStatus) {
+    const ref = doc(db, "orders", orderID);
+    await updateDoc(ref, { status });
+  }
+
+  async getAll(userID: string, myOders: boolean) {
+    const q = query(
+      collection(db, "orders"),
+      where(myOders ? "customerID" : "providerID", "==", userID),
+      orderBy("timestamp", "desc"),
+    );
+    const querySnapshot = await getDocs(q);
+
+    const res: OrderData[] = [];
+    for (const doc of querySnapshot.docs) {
+      const [provider, customer] = await Promise.all([
+        userDao.get(doc.data().providerID),
+        userDao.get(doc.data().customerID),
+      ]);
+      res.push({ ...doc.data(), provider, customer, id: doc.id } as OrderData);
+    }
+
+    return res;
   }
 
   async checkout(userID: string) {
     await runTransaction(db, async (tx) => {
       const cartItems = await productDao.getAllCartProducts(userID);
-      const sellerProducts = new Map<string, string[]>();
+      const sellerProducts = new Map<
+        string,
+        { productID: string; price: number }[]
+      >();
 
       for (const item of cartItems) {
         if (!sellerProducts.has(item.ownerId)) {
           sellerProducts.set(item.ownerId, []);
         }
 
-        sellerProducts.get(item.ownerId)?.push(item.productID);
+        sellerProducts
+          .get(item.ownerId)
+          ?.push({ productID: item.productID, price: item.price });
         tx.delete(doc(db, "users", userID, "cart", item.cartItemID));
       }
 
-      for (const [sellerID, productIDs] of sellerProducts) {
-        tx.set(doc(db, "users", sellerID, "orders", uuid.v4().toString()), {
-          productIDs,
-          userID,
+      for (const [sellerID, products] of sellerProducts) {
+        tx.set(doc(db, "orders", uuid.v4().toString()), {
+          products,
+          customerID: userID,
+          providerID: sellerID,
+          totalPrice: products
+            .map((v) => v.price)
+            .reduce((acc, cur) => acc + cur, 0),
           status: OrderStatus.PENDING,
+          timestamp: Timestamp.now(),
         });
       }
     });

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { UserData, UserType, userDao } from "@/lib/dao/user";
 import LoadingScreen from "@/components/loadingScreen";
 import Avatar from "@/components/avatar";
@@ -12,6 +12,7 @@ import ProductsList from "@/components/productsList";
 import { ProductsData, productDao } from "@/lib/dao/products";
 import SearchBar from "@/components/searchBar";
 import SortingMenu from "@/components/sortingMenu";
+import { ProfileName } from "@/components/profileName";
 
 const Profile = () => {
   const params = useLocalSearchParams();
@@ -34,18 +35,16 @@ const Profile = () => {
     });
   }, []);
 
-  useEffect(() => {
-    const fetchProviderProducts = async () => {
-      const fetchedProducts = await productDao.getProductSpecificProviderId(
-        params.id as string,
-        order,
-        direction
-      );
-      setProducts(fetchedProducts);
-      setShownProducts(fetchedProducts);
-    };
-    fetchProviderProducts();
+  const fetchProduct = useCallback(() => {
+    productDao
+      .getProductSpecificProviderId(params.id as string, order, direction)
+      .then((fetchedProducts) => {
+        setProducts(fetchedProducts);
+        setShownProducts(fetchedProducts);
+      });
   }, [order, direction]);
+
+  useFocusEffect(fetchProduct);
 
   if (loading) {
     return <LoadingScreen />;
@@ -76,6 +75,14 @@ const Profile = () => {
         break;
       case "price_desc":
         setOrder("price");
+        setDirection("desc");
+        break;
+      case "alpha_asc":
+        setOrder("name");
+        setDirection("asc");
+        break;
+      case "alpha_desc":
+        setOrder("name");
         setDirection("desc");
         break;
       default:
@@ -134,18 +141,6 @@ const Profile = () => {
   );
 };
 
-const ProfileName = ({ user }: { user: UserData }) => {
-  if (user.type === UserType.CUSTOMER) {
-    return (
-      <Text style={styles.profileName}>
-        {user.firstName} {user.lastName}
-      </Text>
-    );
-  }
-
-  return <Text style={styles.profileName}>{user.storeName}</Text>;
-};
-
 const LogoutBtn = () => {
   const logout = useCallback(() => {
     auth.signOut();
@@ -157,12 +152,5 @@ const LogoutBtn = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  profileName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
 
 export default Profile;

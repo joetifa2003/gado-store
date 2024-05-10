@@ -1,4 +1,4 @@
-import React, { useContext, useState,useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { ProductsData, productDao } from "@/lib/dao/products";
 import colors from "@/lib/colors";
@@ -14,10 +14,9 @@ const ProductCard = ({
   productData: ProductsData;
   deleteProduct?: (item: any) => void;
 }) => {
-  const  user  = useContext(userContext);
-   const [storeName, setStoreName] = useState<string | undefined>("");
-   const [products, setProducts] = useState<ProductsData[] | undefined>([]);
-
+  const user = useContext(userContext);
+  const [storeName, setStoreName] = useState<string | undefined>("");
+  const [products, setProducts] = useState<ProductsData[] | undefined>([]);
 
   userDao.get(productData.ownerId).then((user) => {
     try {
@@ -47,6 +46,17 @@ const ProductCard = ({
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    userDao.get(productData.ownerId).then((user) => {
+      try {
+        setStoreName(user.storeName);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }, []);
+
   return (
     <Pressable
       style={styles.container}

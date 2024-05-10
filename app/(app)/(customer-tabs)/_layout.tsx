@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import colors from "@/lib/colors";
 import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -21,6 +21,7 @@ const Layout = () => {
       <Tabs.Screen
         name="cart"
         options={{
+          tabBarLabel: "Cart",
           headerTitle: "Cart",
           headerTitleAlign: "center",
           headerRight: () => <Header />,
@@ -29,11 +30,11 @@ const Layout = () => {
           ),
         }}
       />
-
       <Tabs.Screen
         name="orders"
         options={{
-          headerTitle: "Orders",
+          tabBarLabel: "My orders",
+          headerTitle: "My orders",
           tabBarIcon: () => (
             <FontAwesome5 name="clipboard-check" size={24} color="black" />
           ),
