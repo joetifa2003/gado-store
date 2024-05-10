@@ -1,5 +1,5 @@
 import { ProductsData, productDao } from "@/lib/dao/products";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -53,7 +53,13 @@ const SingleProductPage = () => {
           <Text style={styles.productPrice}>{product.price}L.E</Text>
         </View>
         <View style={styles.spacingElements}>
-          <Text>{storeName}</Text>
+          <Pressable
+            onPress={() => {
+              router.navigate(`profile/${product.ownerId}`);
+            }}
+          >
+            <Text>{storeName}</Text>
+          </Pressable>
           {user.UID !== product.ownerId && (
             <Pressable
               onPress={() => {
