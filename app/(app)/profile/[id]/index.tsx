@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { UserData, UserType, userDao } from "@/lib/dao/user";
 import LoadingScreen from "@/components/loadingScreen";
 import Avatar from "@/components/avatar";
@@ -35,18 +35,16 @@ const Profile = () => {
     });
   }, []);
 
-  useEffect(() => {
-    const fetchProviderProducts = async () => {
-      const fetchedProducts = await productDao.getProductSpecificProviderId(
-        params.id as string,
-        order,
-        direction,
-      );
-      setProducts(fetchedProducts);
-      setShownProducts(fetchedProducts);
-    };
-    fetchProviderProducts();
+  const fetchProduct = useCallback(() => {
+    productDao
+      .getProductSpecificProviderId(params.id as string, order, direction)
+      .then((fetchedProducts) => {
+        setProducts(fetchedProducts);
+        setShownProducts(fetchedProducts);
+      });
   }, [order, direction]);
+
+  useFocusEffect(fetchProduct);
 
   if (loading) {
     return <LoadingScreen />;
