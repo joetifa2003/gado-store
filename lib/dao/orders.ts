@@ -5,6 +5,7 @@ import {
   getDocs,
   query,
   runTransaction,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { db } from "../firebase";
@@ -91,6 +92,11 @@ class OrdersDao {
     order.id = orderSnap.id;
 
     return order;
+  }
+
+  async cancelOrder(orderID: string) {
+    const ref = doc(db, "orders", orderID);
+    await updateDoc(ref, { status: OrderStatus.CANCELLED });
   }
 
   async myOrders(userID: string) {
