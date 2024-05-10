@@ -61,8 +61,8 @@ const Profile = () => {
     } else if (products) {
       setShownProducts(
         products.filter((product) =>
-          product.name.toLowerCase().includes(searchFor.toLowerCase()),
-        ),
+          product.name.toLowerCase().includes(searchFor.toLowerCase())
+        )
       );
     }
   };
@@ -77,6 +77,14 @@ const Profile = () => {
         break;
       case "price_desc":
         setOrder("price");
+        setDirection("desc");
+        break;
+      case "alpha_asc":
+        setOrder("name");
+        setDirection("asc");
+        break;
+      case "alpha_desc":
+        setOrder("name");
         setDirection("desc");
         break;
       default:

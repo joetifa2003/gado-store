@@ -38,6 +38,14 @@ const Home = () => {
         setOrder("price");
         setDirection("desc");
         break;
+      case "alpha_asc":
+        setOrder("name");
+        setDirection("asc");
+        break;
+      case "alpha_desc":
+        setOrder("name");
+        setDirection("desc");
+        break;
       default:
         setOrder("name");
         setDirection("asc");
