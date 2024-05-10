@@ -9,7 +9,6 @@ import colors from "@/lib/colors";
 import { auth } from "@/lib/firebase";
 import Button from "@/components/button";
 import { userContext } from "@/lib/userContext";
-import ProductsList from "@/components/productsList";
 
 const Profile = () => {
   const params = useLocalSearchParams();
@@ -17,7 +16,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const loggedInUser = useContext(userContext);
   const router = useRouter();
-  const currentUser = useContext(userContext);
 
   useEffect(() => {
     userDao.get(params.id as string).then((user) => {
