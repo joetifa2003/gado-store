@@ -18,6 +18,8 @@ const OrderProductsPage = () => {
   const [order, setOrder] = useState<OrderData | null>(null);
   const [products, setProducts] = useState<ProductsData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [markCompleteLoading, setMarkCompleteLoading] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
   const user = useContext(userContext);
 
   const fetchOrder = async () => {
@@ -46,13 +48,26 @@ const OrderProductsPage = () => {
   );
 
   const cancelOrder = async () => {
-    await orderDao.changeStatus(order!.id, OrderStatus.CANCELLED);
-    await fetchOrder();
+    setCancelLoading(true);
+    try {
+      await orderDao.changeStatus(order!.id, OrderStatus.CANCELLED);
+      await fetchOrder();
+    } catch (error) {
+    } finally {
+      setCancelLoading(false);
+    }
   };
 
   const markAsCompleted = async () => {
-    await orderDao.changeStatus(order!.id, OrderStatus.COMPLETED);
-    await fetchOrder();
+    setMarkCompleteLoading(true);
+
+    try {
+      await orderDao.changeStatus(order!.id, OrderStatus.COMPLETED);
+      await fetchOrder();
+    } catch (error) {
+    } finally {
+      setMarkCompleteLoading(false);
+    }
   };
 
   if (loading || !order) {
@@ -80,9 +95,19 @@ const OrderProductsPage = () => {
           {order.status === OrderStatus.PENDING ? (
             <>
               {isProvider && (
-                <Button title="Mark as completed" onPress={markAsCompleted} />
+                <Button
+                  title="Mark as completed"
+                  onPress={markAsCompleted}
+                  loading={markCompleteLoading}
+                  disabled={cancelLoading}
+                />
               )}
-              <Button title="Cancel order" onPress={cancelOrder} />
+              <Button
+                title="Cancel order"
+                onPress={cancelOrder}
+                loading={cancelLoading}
+                disabled={markCompleteLoading}
+              />
             </>
           ) : null}
         </View>

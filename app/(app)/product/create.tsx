@@ -89,14 +89,10 @@ export default function ProductCreate() {
     }
   }, []);
 
-
-
-  
-
   return (
     <View style={{ padding: 8, gap: 8 }}>
       {image && <Image source={{ uri: image }} height={200} />}
-      <Button title="Upload Image" onPress={pickImage} disabled={uploading} />
+      <Button title="Upload Image" onPress={pickImage} loading={uploading} />
       <Input placeholder="Product Name" value={name} onChangeText={setName} />
       <Input
         placeholder="Product Description"
@@ -112,8 +108,6 @@ export default function ProductCreate() {
         keyBoardType="numeric"
       />
       <Button title="Create Product" onPress={createProduct} />
-      
-      
     </View>
   );
 }

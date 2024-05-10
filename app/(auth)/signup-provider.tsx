@@ -108,7 +108,7 @@ export default function SignUpCustomer() {
       <Button
         title="Chose profile picture"
         onPress={pickImage}
-        disabled={uploading}
+        loading={uploading}
       />
       <View>
         <Input

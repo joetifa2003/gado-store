@@ -127,7 +127,7 @@ const Profile = () => {
           />
         )}
       </View>
-      <View style={{ width: "100%", flex: 1 }}>
+      <View style={{ width: "100%", flex: 1, backgroundColor: colors.white }}>
         <SearchBar
           handleSearch={handleSearch}
           setSearchFor={(val: string) => setSearchFor(val)}

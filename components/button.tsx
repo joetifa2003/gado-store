@@ -5,17 +5,19 @@ export default function Button({
   onPress,
   title,
   disabled,
+  loading,
   style = {},
 }: {
   title: string;
   onPress: () => void;
+  loading?: boolean;
   disabled?: boolean;
   style?: any;
 }) {
   return (
     <Pressable
       onPress={onPress}
-      disabled={disabled}
+      disabled={disabled || loading}
       style={{
         backgroundColor: disabled ? colors.white : colors.primary,
         display: "flex",
@@ -28,7 +30,7 @@ export default function Button({
         ...style,
       }}
     >
-      {disabled && <ActivityIndicator />}
+      {loading && <ActivityIndicator />}
       <Text>{title}</Text>
     </Pressable>
   );

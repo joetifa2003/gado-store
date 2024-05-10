@@ -59,7 +59,7 @@ export default function SignUpCustomer() {
             address: address,
             avatar: photoUrl,
           },
-          password
+          password,
         )
         .then(() => {
           router.replace("/");
@@ -119,7 +119,7 @@ export default function SignUpCustomer() {
       <Button
         title="Chose profile picture"
         onPress={pickImage}
-        disabled={uploading}
+        loading={uploading}
       />
       <View>
         <Input

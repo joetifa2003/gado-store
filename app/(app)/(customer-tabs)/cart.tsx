@@ -19,13 +19,13 @@ const Cart = () => {
     useCallback(() => {
       const fetchAllCartProduct = async () => {
         const allProducts = await productDao.getAllCartProducts(
-          currentUser.UID!
+          currentUser.UID!,
         );
         setProducts(allProducts);
         setLoading(false);
       };
       fetchAllCartProduct();
-    }, [])
+    }, []),
   );
 
   const deleteProducts = async (item: CartItem) => {
@@ -64,11 +64,7 @@ const Cart = () => {
           zIndex: 99,
         }}
       >
-        <Button
-          title="Checkout"
-          onPress={checkout}
-          disabled={checkoutLoading}
-        />
+        <Button title="Checkout" onPress={checkout} loading={checkoutLoading} />
       </View>
     </View>
   );
