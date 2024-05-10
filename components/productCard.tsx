@@ -5,6 +5,7 @@ import colors from "@/lib/colors";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
 import { userDao } from "@/lib/dao/user";
+import { userContext } from "@/lib/userContext";
 
 const ProductCard = ({
   productData,

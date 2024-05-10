@@ -19,6 +19,7 @@ const SingleProductPage = () => {
     useLocalSearchParams();
   const [product, setProduct] = useState<ProductsData>();
   const [loading, setLoading] = useState(true);
+  const user = useContext(userContext);
 
   const currentUser = useContext(userContext);
   useEffect(() => {
@@ -52,15 +53,17 @@ const SingleProductPage = () => {
         </View>
         <View style={styles.spacingElements}>
           <Text>{storeName}</Text>
-          <Pressable
-            onPress={() => {
-              if (currentUser.UID) {
-                productDao.addToCart(product.id, currentUser.UID);
-              }
-            }}
-          >
-            <Fontisto name="shopping-basket-add" size={24} color="black" />
-          </Pressable>
+          {user.UID !== product.ownerId && (
+            <Pressable
+              onPress={() => {
+                if (currentUser.UID) {
+                  productDao.addToCart(product.id, currentUser.UID);
+                }
+              }}
+            >
+              <Fontisto name="shopping-basket-add" size={24} color="black" />
+            </Pressable>
+          )}
         </View>
       </View>
       <View style={styles.descriptionContainer}>
