@@ -101,11 +101,11 @@ class ProductsDao {
     return products;
   }
 
-  async getProductSpecificProviderId(userId: string) {
+  async getProductSpecificProviderId(userId: string , order?: string, direction?: string) {
     //const userRef = doc(db, "users", userId);
     // const cartCollection = collection(userRef, "cart");
 
-    const q = query(collection(db, "products"), where("ownerId", "==", userId));
+    const q = query(collection(db, "products"), where("ownerId", "==", userId) , orderBy(order ? order : "name" , direction ? (direction as OrderByDirection) : "asc"));
     const snapshot = await getDocs(q);
     const products: ProductsData[] = [];
     snapshot.forEach((doc) => {

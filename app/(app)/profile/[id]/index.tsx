@@ -10,7 +10,8 @@ import Button from "@/components/button";
 import { userContext } from "@/lib/userContext";
 import ProductsList from "@/components/productsList";
 import { ProductsData, productDao } from "@/lib/dao/products";
-import { SearchBar } from "react-native-screens";
+import SearchBar from "@/components/searchBar";
+import SortingMenu from "@/components/sortingMenu";
 
 const Profile = () => {
   const params = useLocalSearchParams();
@@ -18,6 +19,12 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const loggedInUser = useContext(userContext);
   const [products, setProducts] = useState<ProductsData[]>([]);
+  const [shownProducts, setShownProducts] = useState<ProductsData[]>([]);
+  const [searchFor, setSearchFor] = useState("");
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [order, setOrder] = useState("");
+  const [direction, setDirection] = useState("");
+
   const router = useRouter();
 
   useEffect(() => {
@@ -25,14 +32,20 @@ const Profile = () => {
       setUser(user);
       setLoading(false);
     });
+  }, []);
+
+  useEffect(() => {
     const fetchProviderProducts = async () => {
       const fetchedProducts = await productDao.getProductSpecificProviderId(
-        params.id as string
+        params.id as string,
+        order,
+        direction
       );
       setProducts(fetchedProducts);
+      setShownProducts(fetchedProducts);
     };
     fetchProviderProducts();
-  }, []);
+  }, [order, direction]);
 
   if (loading) {
     return <LoadingScreen />;
@@ -40,6 +53,38 @@ const Profile = () => {
 
   const isOwner = user.UID === loggedInUser?.UID;
   const isOwnerProvider = isOwner && user.type === UserType.PROVIDER;
+
+  const handleDelete = () => {};
+
+  const handleSearch = (searchFor: string) => {
+    if (searchFor.trim() === "") {
+      setShownProducts(products);
+    } else if (products) {
+      setShownProducts(
+        products.filter((product) =>
+          product.name.toLowerCase().includes(searchFor.toLowerCase())
+        )
+      );
+    }
+  };
+
+  const handleOptionChange = (option: string) => {
+    setSelectedOption(option);
+
+    switch (option) {
+      case "price_asc":
+        setOrder("price");
+        setDirection("asc");
+        break;
+      case "price_desc":
+        setOrder("price");
+        setDirection("desc");
+        break;
+      default:
+        setOrder("name");
+        setDirection("asc");
+    }
+  };
 
   return (
     <View style={{ gap: 8, flex: 1 }}>
@@ -73,7 +118,19 @@ const Profile = () => {
         )}
       </View>
       <View style={{ width: "100%", flex: 1 }}>
-        <ProductsList products={products} />
+        <SearchBar
+          handleSearch={handleSearch}
+          setSearchFor={(val: string) => setSearchFor(val)}
+        />
+        <SortingMenu
+          selectedOption={selectedOption}
+          handleOptionChange={handleOptionChange}
+        />
+        {isOwnerProvider ? (
+          <ProductsList products={shownProducts} deleteProduct={handleDelete} />
+        ) : (
+          <ProductsList products={shownProducts} />
+        )}
       </View>
     </View>
   );
