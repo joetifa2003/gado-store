@@ -20,8 +20,8 @@ const Home = () => {
     } else if (products) {
       setShownProducts(
         products.filter((product) =>
-          product.name.toLowerCase().includes(searchFor.toLowerCase()),
-        ),
+          product.name.toLowerCase().includes(searchFor.toLowerCase())
+        )
       );
     }
   };
@@ -47,12 +47,12 @@ const Home = () => {
     const allProducts = await productDao.getAll(order, direction);
     setProducts(allProducts);
     setShownProducts(allProducts);
-  }, []);
+  }, [order, direction]);
 
   useFocusEffect(
     useCallback(() => {
       fetchAllProduct();
-    }, []),
+    }, [])
   );
 
   useEffect(() => {
