@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   picker: {
-    width: 120,
+    width: 170,
     height: 40,
   },
 });
