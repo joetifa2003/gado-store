@@ -46,28 +46,28 @@ export default function SignUpCustomer() {
 
         return;
       }
-
-      userDao
-        .create(
-          {
-            type: UserType.PROVIDER,
-            email: email,
-            storeName: storeName,
-            address: address,
-            avatar: photoUrl,
-          },
-          password,
-        )
-        .then(() => {
-          router.replace("/");
-        })
-        .catch((e) => {
-          Toast.show({
-            text1: e.message,
-            type: "error",
-          });
-        });
     }
+
+    userDao
+      .create(
+        {
+          type: UserType.PROVIDER,
+          email: email,
+          storeName: storeName,
+          address: address,
+          avatar: photoUrl,
+        },
+        password,
+      )
+      .then(() => {
+        router.replace("/");
+      })
+      .catch((e) => {
+        Toast.show({
+          text1: e.message,
+          type: "error",
+        });
+      });
   }, [storeName, email, password, confirmPassword, address, photoUrl]);
 
   const pickImage = useCallback(async () => {
